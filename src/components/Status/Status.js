@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PxToRem from '../../utils/PxToRem';
+import Text from '../common/Text';
 
 const getStatusBackground = (status) => {
     switch (status) {
@@ -34,13 +35,12 @@ const StatusWrapper = styled.div`
     padding:${PxToRem(4)} ${PxToRem(12)};
     border-radius: ${PxToRem(20)};
     background: ${props => getStatusBackground(props.status)};
-    color: ${props => getStatusColor(props.status)};
     margin:0 auto;
 `
 
 const Status = ({ status }) => {
     return (
-        <StatusWrapper status={status}>{status}</StatusWrapper>
+        <StatusWrapper status={status}><Text marginTop={PxToRem(4)} color={getStatusColor(status)}>{status}</Text></StatusWrapper>
     )
 }
 

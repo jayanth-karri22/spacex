@@ -1,0 +1,1 @@
+export const getAllCapsulesResults = ({ capsules }) => capsules.allCapsules;

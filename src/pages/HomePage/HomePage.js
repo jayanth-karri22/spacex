@@ -1,4 +1,5 @@
-import React, { Fragment, useMemo } from 'react';
+import React, { Fragment, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Calendar from '../../assets/Icons/Calendar';
 import DownArrow from '../../assets/Icons/DownArrow';
@@ -9,6 +10,8 @@ import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
 import Text from '../../components/common/Text';
 import Status from '../../components/Status';
+import { fetchAllCapsules } from '../../redux/capsules/actions';
+import { getAllCapsulesResults } from '../../redux/capsules/selectors';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
@@ -37,6 +40,14 @@ const SelectLaunchType = () => {
 }
 
 const HomePage = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchAllCapsules());
+    }, [])
+
+
+    console.log(useSelector(getAllCapsulesResults), "RESULTS");
     const COLUMNS = useMemo(
         () => [
             {

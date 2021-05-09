@@ -15,7 +15,7 @@ import { getAllLaunchesResults } from '../../redux/launches/selectors';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
-    width: 70%;
+    width: ${PxToRem(952)};
     margin: ${PxToRem(16)} auto;
 `
 
@@ -48,6 +48,7 @@ const HomePage = () => {
 
 
     const launches = useSelector(getAllLaunchesResults);
+    console.log(launches);
     const COLUMNS = useMemo(
         () => [
             {
@@ -56,7 +57,14 @@ const HomePage = () => {
             },
             {
                 Header: 'Launched(UTC)',
-                accessor: 'launch_date_utc'
+                accessor: d => {
+                    const date = new Date(d.launch_date_unix * 1000);
+                    const monthNames = [
+                        "January", "February", "March", "April", "May",
+                        "June", "July", "August", "September", "October",
+                        "November", "December"];
+                    return <Text textAlign='initial'>{date.getDate()} {monthNames[date.getMonth()]} {date.getFullYear()} at {date.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
+                }
             },
             {
                 Header: 'Location',
@@ -120,7 +128,7 @@ const HomePage = () => {
             <Header />
             <ContentContainer>
                 <Col>
-                    <Row>
+                    <Row margin={`${PxToRem(24)} 0`}>
                         <SelectDate />
                         <SelectLaunchType />
                     </Row>

@@ -5,11 +5,11 @@ import Text from '../common/Text';
 
 const getStatusBackground = (status) => {
     switch (status) {
-        case 'Success':
+        case true:
             return '#DEF7EC'
-        case 'Failed':
+        case false:
             return '#FDE2E1'
-        case 'Upcoming':
+        case null:
             return '#FEF3C7'
         default:
             return '#FEF3C7'
@@ -18,14 +18,25 @@ const getStatusBackground = (status) => {
 
 const getStatusColor = (status) => {
     switch (status) {
-        case 'Success':
+        case true:
             return '#03543F'
-        case 'Failed':
+        case false:
             return '#981B1C'
-        case 'Upcoming':
+        case null:
             return '#92400F'
         default:
             return '#92400F'
+    }
+}
+
+const getStatus = (status) => {
+    switch (status) {
+        case true:
+            return 'Success'
+        case false:
+            return 'Failed'
+        case null:
+            return 'Upcoming'
     }
 }
 
@@ -40,7 +51,7 @@ const StatusWrapper = styled.div`
 
 const Status = ({ status }) => {
     return (
-        <StatusWrapper status={status}><Text marginTop={PxToRem(4)} color={getStatusColor(status)}>{status}</Text></StatusWrapper>
+        <StatusWrapper status={status}><Text marginTop={PxToRem(4)} color={getStatusColor(status)}>{getStatus(status)}</Text></StatusWrapper>
     )
 }
 

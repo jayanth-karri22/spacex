@@ -4,9 +4,11 @@ export const BASE_URL = {
     dev: 'https://api.spacexdata.com',
 }[REACT_APP_ENVIRONMENT];
 
-export const CAPSULES = {
-    ALL_CAPSULES: '/v3/capsules',
-    ONE_CAPSULE: 'v3/capsules/{{capsule_serial}}',
-    UPCOMING_CAPSULES: '/v3/capsules/upcoming',
-    PAST_CAPSULES: '/v3/capsules/past'
+export const LAUNCHES = {
+    ALL_LAUNCHES: '/v3/launches',
+    ONE_LAUNCH: '/v3/launches/{{flight_number}}',
+    UPCOMING_LAUNCHES: '/v3/launches/upcoming',
+    PAST_LAUNCHES: '/v3/launches/past',
+    LATEST_LAUNCH: '/v3/launches/latest',
+    NEXT_LAUNCH: '/v3/launches/next'
 }

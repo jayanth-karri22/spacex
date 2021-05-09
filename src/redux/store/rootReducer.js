@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import capsules from '../capsules/reducers';
+import launches from '../launches/reducers';
 
 
 export default combineReducers({
-    capsules
+    launches
 })

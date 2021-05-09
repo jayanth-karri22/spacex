@@ -10,8 +10,8 @@ import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
 import Text from '../../components/common/Text';
 import Status from '../../components/Status';
-import { fetchAllCapsules } from '../../redux/capsules/actions';
-import { getAllCapsulesResults } from '../../redux/capsules/selectors';
+import { fetchAllLaunches } from '../../redux/launches/actions';
+import { getAllLaunchesResults } from '../../redux/launches/selectors';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
@@ -43,46 +43,45 @@ const HomePage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchAllCapsules());
+        dispatch(fetchAllLaunches());
     }, [])
 
 
-    console.log(useSelector(getAllCapsulesResults), "RESULTS");
+    const launches = useSelector(getAllLaunchesResults);
     const COLUMNS = useMemo(
         () => [
             {
                 Header: 'No',
-                accessor: 'no'
+                accessor: 'flight_number'
             },
             {
                 Header: 'Launched(UTC)',
-                accessor: 'launched'
+                accessor: 'launch_date_utc'
             },
             {
                 Header: 'Location',
-                accessor: 'location'
+                accessor: 'launch_site.site_name'
             },
             {
                 Header: 'Mission',
-                accessor: 'mission'
+                accessor: 'mission_name'
             },
             {
                 Header: 'Orbit',
-                accessor: 'orbit'
+                accessor: 'rocket.second_stage.payloads[0].orbit'
             },
             {
                 Header: 'Launch Status',
-                accessor: 'status',
+                accessor: 'launch_success',
                 Cell: (row) => {
-                    console.log(row);
                     return (
-                        <Status status={row?.row?.original?.status} />
+                        <Status status={row?.row?.original?.launch_success} />
                     )
                 }
             },
             {
                 Header: 'Rocket',
-                accessor: 'rocket'
+                accessor: 'rocket.rocket_name'
             }
         ], []
     )
@@ -126,7 +125,7 @@ const HomePage = () => {
                         <SelectLaunchType />
                     </Row>
                     <Row>
-                        <Table columns={COLUMNS} tableData={DUMMY_DATA} />
+                        <Table columns={COLUMNS} tableData={launches} />
                     </Row>
                 </Col>
             </ContentContainer>

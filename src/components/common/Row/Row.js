@@ -11,10 +11,11 @@ const Row = ({
     justifyContent = 'flex-start',
     alignItems = 'center',
     style,
+    onClick,
     ...rest
 }) => {
     return (
-        <StyledRow style={{ justifyContent, alignItems, ...style, ...rest }}>
+        <StyledRow onClick={onClick} style={{ justifyContent, alignItems, ...style, ...rest }}>
             {children}
         </StyledRow>
     );

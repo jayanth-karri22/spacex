@@ -6,24 +6,23 @@ import DatePicker from '../common/DatePicker';
 import Row from "../common/Row";
 import Text from "../common/Text";
 
-const SelectDate = () => {
+const SelectDate = ({ monthNames }) => {
     const [showCalendar, setShowCalendar] = useState(false);
 
-    const handleShowCalendar = () => {
+    const handleToggleCalendar = () => {
         setShowCalendar(!showCalendar);
     }
 
-    const handleCloseCalendar = () => {
-        setShowCalendar(!showCalendar);
-    }
 
     return (
-        <Row onClick={handleShowCalendar} style={{ cursor: 'pointer' }}>
-            <Calendar />
-            <Text margin={`0 ${PxToRem(8)}`} fontSize={PxToRem(16)} lineHeight={PxToRem(16)} letterSpacing='-0.01em'>Past 6 months</Text>
-            <DownArrow />
-            <DatePicker isOpen={showCalendar} closeModal={handleCloseCalendar} />
-        </Row>
+        <>
+            <Row onClick={handleToggleCalendar} style={{ cursor: 'pointer' }}>
+                <Calendar />
+                <Text margin={`0 ${PxToRem(8)}`} fontSize={PxToRem(16)} lineHeight={PxToRem(16)} letterSpacing='-0.01em'>Past 6 months</Text>
+                <DownArrow />
+            </Row>
+            <DatePicker isOpen={showCalendar} closeModal={handleToggleCalendar} />
+        </>
     )
 }
 

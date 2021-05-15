@@ -11,6 +11,7 @@ import SelectLaunchType from '../../components/SelectLaunchType';
 import Status from '../../components/Status';
 import { fetchAllLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
 import { getAllLaunchResults, getFailedLaunchResults, getSuccessfulLaunchResults, getUpcomingLaunchResults } from '../../redux/launches/selectors';
+import { monthNames } from '../../utils/constants';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
@@ -50,7 +51,6 @@ const HomePage = () => {
     }, [selected])
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
-
     const launches = useSelector(getResults[selected]);
     const COLUMNS = useMemo(
         () => [
@@ -62,10 +62,6 @@ const HomePage = () => {
                 Header: 'Launched(UTC)',
                 accessor: d => {
                     const date = new Date(d.launch_date_unix * 1000);
-                    const monthNames = [
-                        "January", "February", "March", "April", "May",
-                        "June", "July", "August", "September", "October",
-                        "November", "December"];
                     return <Text textAlign='initial'>{date.getDate()} {monthNames[date.getMonth()]} {date.getFullYear()} at {date.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
                 }
             },

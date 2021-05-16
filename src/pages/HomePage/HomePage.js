@@ -5,13 +5,11 @@ import Col from '../../components/common/Col';
 import Header from '../../components/common/Header';
 import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
-import Text from '../../components/common/Text';
 import SelectDate from '../../components/SelectDate';
 import SelectLaunchType from '../../components/SelectLaunchType';
-import Status from '../../components/Status';
-import { fetchAllLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
-import { getAllLaunchResults, getFailedLaunchResults, getSuccessfulLaunchResults, getUpcomingLaunchResults } from '../../redux/launches/selectors';
-import { monthNames } from '../../utils/constants';
+import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
+import { getLaunchResults } from '../../redux/launches/selectors';
+import { launchTableColumns } from '../../utils/launchTableColumns';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
@@ -33,15 +31,10 @@ const HomePage = () => {
     const dispatch = useDispatch();
 
     const fetchData = {
-        [ALL_LAUNCHES]: fetchAllLaunches(),
+        [ALL_LAUNCHES]: fetchLaunches(),
         [UPCOMING_LAUNCHES]: fetchUpcomingLaunches(),
-    }
-
-    const getResults = {
-        [ALL_LAUNCHES]: getAllLaunchResults,
-        [UPCOMING_LAUNCHES]: getUpcomingLaunchResults,
-        [SUCCESSFUL_LAUNCHES]: getSuccessfulLaunchResults,
-        [FAILED_LAUNCHES]: getFailedLaunchResults,
+        [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true }),
+        [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false })
     }
 
     useEffect(() => {
@@ -51,46 +44,9 @@ const HomePage = () => {
     }, [selected])
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
-    const launches = useSelector(getResults[selected]);
+    const launches = useSelector(getLaunchResults);
     const COLUMNS = useMemo(
-        () => [
-            {
-                Header: 'No',
-                accessor: 'flight_number'
-            },
-            {
-                Header: 'Launched(UTC)',
-                accessor: d => {
-                    const date = new Date(d.launch_date_unix * 1000);
-                    return <Text textAlign='initial'>{date.getDate()} {monthNames[date.getMonth()]} {date.getFullYear()} at {date.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
-                }
-            },
-            {
-                Header: 'Location',
-                accessor: 'launch_site.site_name'
-            },
-            {
-                Header: 'Mission',
-                accessor: 'mission_name'
-            },
-            {
-                Header: 'Orbit',
-                accessor: 'rocket.second_stage.payloads[0].orbit'
-            },
-            {
-                Header: 'Launch Status',
-                accessor: 'launch_success',
-                Cell: (row) => {
-                    return (
-                        <Status status={row?.row?.original?.launch_success} />
-                    )
-                }
-            },
-            {
-                Header: 'Rocket',
-                accessor: 'rocket.rocket_name'
-            }
-        ], []
+        () => launchTableColumns, []
     );
     return (
         <Fragment>

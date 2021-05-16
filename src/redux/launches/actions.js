@@ -1,25 +1,19 @@
-import { getAllLaunches } from '../../repository/launches/getAllLaunches';
+import { getLaunches } from '../../repository/launches/getLaunches';
 import { getUpcomingLaunches } from '../../repository/launches/getUpcomingLaunches';
 import {
-    SET_ALL_LAUNCHES,
-    SET_UPCOMING_LAUNCHES
+    SET_LAUNCHES
 } from './actionTypes';
 
 
-export const setAllLaunches = (payload) => ({
-    type: SET_ALL_LAUNCHES,
+export const setLaunches = (payload) => ({
+    type: SET_LAUNCHES,
     payload
 });
 
-export const setUpcomingLaunches = (payload) => ({
-    type: SET_UPCOMING_LAUNCHES,
-    payload
-})
-
-export const fetchAllLaunches = () => async (dispatch) => {
+export const fetchLaunches = (queryParams) => async (dispatch) => {
     try {
-        const response = await getAllLaunches();
-        dispatch(setAllLaunches(response.data));
+        const response = await getLaunches(queryParams);
+        dispatch(setLaunches(response.data));
     } catch (error) {
         return error;
     }
@@ -28,7 +22,7 @@ export const fetchAllLaunches = () => async (dispatch) => {
 export const fetchUpcomingLaunches = () => async (dispatch) => {
     try {
         const response = await getUpcomingLaunches();
-        dispatch(setUpcomingLaunches(response.data))
+        dispatch(setLaunches(response.data))
     } catch (error) {
         return error;
     }

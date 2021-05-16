@@ -24,6 +24,7 @@ const HomePage = () => {
     const FAILED_LAUNCHES = 'Failed Launches'
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(ALL_LAUNCHES);
+    const [dateQueryParam, setDateQueryParam] = useState({ start: '', end: '' });
     const toggling = (e, option) => {
         setIsOpen(!isOpen);
         setSelected(option);
@@ -31,30 +32,35 @@ const HomePage = () => {
     const dispatch = useDispatch();
 
     const fetchData = {
-        [ALL_LAUNCHES]: fetchLaunches(),
-        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches(),
-        [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true }),
-        [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false })
+        [ALL_LAUNCHES]: fetchLaunches({ ...dateQueryParam }),
+        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches({ ...dateQueryParam }),
+        [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true, ...dateQueryParam }),
+        [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false, ...dateQueryParam })
     }
 
     useEffect(() => {
         if (fetchData[selected]) {
             dispatch(fetchData[selected])
         }
-    }, [selected])
+    }, [selected, dateQueryParam])
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
     const launches = useSelector(getLaunchResults);
     const COLUMNS = useMemo(
         () => launchTableColumns, []
     );
+
+    const getDateQueryParams = (startDate, endDate) => {
+        setDateQueryParam({ start: startDate, end: endDate });
+    }
+
     return (
         <Fragment>
             <Header />
             <ContentContainer>
                 <Col>
                     <Row margin={`${PxToRem(24)} 0`}>
-                        <SelectDate />
+                        <SelectDate getDateQueryParams={getDateQueryParams} />
                         <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
                     </Row>
                     <Row>

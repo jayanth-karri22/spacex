@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
@@ -43,14 +43,72 @@ const HorizontalRule = styled.hr`
 
 const DefaultDatesRanges = ['Past week', 'Past month', 'Past 3 months', 'Past 6 months', 'Past year', 'Past 2 years'];
 
-const DatePicker = ({ isOpen, closeModal }) => {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date(startDate));
-    const handleStartDateChange = (date) => [setStartDate(date), startDate && endDate && startDate != endDate && closeModal()];
-    const handleEndDateChange = (date) => [setEndDate(date), startDate && endDate && startDate != endDate && closeModal()];
-    const years = Array(20).fill().map((_, idx) => endDate.getFullYear() - idx);
+const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) => {
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState(new Date());
+    const [startDateSelected, setStartDateSelected] = useState(false);
+    const [endDateSelected, setEndDateSelected] = useState(false);
+    const [dateRangeSelected, setDateRangeSelected] = useState('All Launches');
 
-    console.log(endDate, startDate)
+    useEffect(() => {
+        getFilterText(dateRangeSelected);
+        getDateQueryParams(startDate, endDate);
+    }, [startDate, endDate])
+
+    const handleStartDateChange = async (date) => {
+        await setStartDate(date);
+        await setStartDateSelected(true);
+        if (endDateSelected) {
+            setStartDateSelected(false);
+            getFilterText(`${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} - ${monthNames[endDate.getMonth()]} ${endDate.getDate()} ${endDate.getFullYear()}`)
+            await closeModal();
+        }
+    };
+    const handleEndDateChange = async (date) => {
+        await setEndDate(date);
+        await setEndDateSelected(true);
+        if (startDateSelected) {
+            setEndDateSelected(false);
+            getFilterText(`${monthNames[startDate.getMonth()]} ${startDate.getDate()} ${startDate.getFullYear()} - ${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()}`)
+            await closeModal();
+        }
+    };
+
+    const handleDateRangeSelect = (e, range) => {
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth();
+        const date = new Date().getDate();
+        setDateRangeSelected(range);
+        switch (range) {
+            case 'Past week':
+                setStartDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7));
+                break;
+            case 'Past month':
+                setStartDate(new Date(year, month - 1, date));
+                break;
+            case 'Past 3 months':
+                setStartDate(new Date(year, month - 3, date));
+                break;
+            case 'Past 6 months':
+                setStartDate(new Date(year, month - 6, date));
+                break;
+            case 'Past year':
+                setStartDate(new Date(year - 1, month, date));
+                break;
+            case 'Past 2 years':
+                setStartDate(new Date(year - 2, month, date));
+                break;
+            default:
+                setStartDate('');
+                setDateRangeSelected('All Launches');
+                setEndDate('');
+                break;
+        }
+
+        closeModal();
+    }
+
+    const years = Array(20).fill().map((_, idx) => endDate.getFullYear() - idx);
 
     return (
         <Modal isOpen={isOpen}>
@@ -59,7 +117,9 @@ const DatePicker = ({ isOpen, closeModal }) => {
                     <Col alignSelf='flex-start' marginTop={PxToRem(4)} >
                         {
                             DefaultDatesRanges.map((dateRange) => (
-                                <Text fontSize={PxToRem(14)} lineHeight={PxToRem(16)} fontWeight={400} color='black' marginBottom={PxToRem(16)}>{dateRange}</Text>
+                                <div onClick={(e) => handleDateRangeSelect(e, dateRange)}>
+                                    <Text fontSize={PxToRem(14)} lineHeight={PxToRem(16)} fontWeight={400} color='black' marginBottom={PxToRem(16)}>{dateRange}</Text>
+                                </div>
                             ))
                         }
                     </Col>

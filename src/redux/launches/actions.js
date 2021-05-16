@@ -19,9 +19,9 @@ export const fetchLaunches = (queryParams) => async (dispatch) => {
     }
 }
 
-export const fetchUpcomingLaunches = () => async (dispatch) => {
+export const fetchUpcomingLaunches = (queryParams) => async (dispatch) => {
     try {
-        const response = await getUpcomingLaunches();
+        const response = await getUpcomingLaunches(queryParams);
         dispatch(setLaunches(response.data))
     } catch (error) {
         return error;

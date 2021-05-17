@@ -2,7 +2,9 @@ import React, { useMemo } from 'react';
 import { usePagination, useRowSelect, useTable } from 'react-table';
 import styled from 'styled-components';
 import PxToRem from '../../../utils/PxToRem';
+import Loader from '../Loader';
 import Pagination from '../Pagination';
+import Text from '../Text';
 
 const TableWrapper = styled.div`
   width: ${PxToRem(952)};
@@ -41,10 +43,19 @@ const TableWrapper = styled.div`
   }
 `;
 
+const Container = styled.div`
+    width: ${PxToRem(952)};
+    height: ${PxToRem(676)};
+    border-radius: 6px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E4E4E7;
+`
+
 const Table = ({
     columns,
     tableData,
-    openLaunchCard
+    openLaunchCard,
+    loading
 }) => {
     const data = useMemo(() => tableData || [], [tableData]);
     const {
@@ -92,7 +103,7 @@ const Table = ({
                         })}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {page.map((row) => {
+                        {!loading && page.map((row) => {
                             prepareRow(row);
                             return (
                                 <tr {...row.getRowProps()} onClick={() => openLaunchCard(row?.original)}>
@@ -108,6 +119,13 @@ const Table = ({
                         })}
                     </tbody>
                 </table>
+                {
+                    tableData.length === 0 && !loading && <Container><Text lineHeight={PxToRem(14)} fontSize={PxToRem(14)} fontWeight={500} marginTop={PxToRem(48)}>No results found for the specified filter</Text></Container>
+                }
+                {
+                    loading && <Container><Loader /></Container>
+                }
+
                 <Pagination
                     alignSelf='flex-end'
                     pageIndex={pageIndex}

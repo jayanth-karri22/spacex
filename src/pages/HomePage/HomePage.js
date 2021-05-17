@@ -9,7 +9,7 @@ import LaunchCard from '../../components/LaunchCard';
 import SelectDate from '../../components/SelectDate';
 import SelectLaunchType from '../../components/SelectLaunchType';
 import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
-import { getLaunchResults } from '../../redux/launches/selectors';
+import { getLaunchResults, getLoadingState } from '../../redux/launches/selectors';
 import { launchTableColumns } from '../../utils/launchTableColumns';
 import PxToRem from '../../utils/PxToRem';
 
@@ -40,12 +40,17 @@ const HomePage = () => {
         [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true, ...dateQueryParam }),
         [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false, ...dateQueryParam })
     }
-
+    const pending = useSelector(getLoadingState);
     useEffect(() => {
         if (fetchData[selected]) {
             dispatch(fetchData[selected])
         }
-    }, [dateQueryParam, selected])
+    }, [selected, dateQueryParam])
+
+
+    const closeLaunchModal = () => {
+        setIsLaunchCardOpen(false);
+    }
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
     const launches = useSelector(getLaunchResults);
@@ -58,7 +63,7 @@ const HomePage = () => {
         setIsLaunchCardOpen(!isLaunchCardOpen);
     }
 
-    const getDateQueryParams = (startDate, endDate) => {
+    const getQueryParams = (startDate, endDate) => {
         setDateQueryParam({ start: startDate, end: endDate });
     }
 
@@ -68,15 +73,15 @@ const HomePage = () => {
             <ContentContainer>
                 <Col>
                     <Row margin={`${PxToRem(24)} 0`}>
-                        <SelectDate getDateQueryParams={getDateQueryParams} />
+                        <SelectDate getQueryParams={getQueryParams} />
                         <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
                     </Row>
                     <Row>
-                        <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} />
+                        <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
                     </Row>
                 </Col>
             </ContentContainer>
-            <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} />
+            <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} closeModal={closeLaunchModal} />
         </>
     )
 }

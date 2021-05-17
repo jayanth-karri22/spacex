@@ -1,28 +1,22 @@
 import {
-    SET_LATEST_LAUNCH,
-    SET_LAUNCH, SET_LAUNCHES,
-
-
-    SET_NEXT_LAUNCH
+    SET_LAUNCHES_FAILED,
+    SET_LAUNCHES_PENDING, SET_LAUNCHES_SUCCESS
 } from './actionTypes';
 
 const initialState = {
     launches: [],
-    launch: {},
-    latestLaunch: {},
-    nextLaunch: {},
+    pending: null,
+    error: null
 }
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case SET_LAUNCHES:
-            return { ...state, launches: action.payload };
-        case SET_LAUNCH:
-            return { ...state, launch: action.payload };
-        case SET_NEXT_LAUNCH:
-            return { ...state, nextLaunch: action.payload };
-        case SET_LATEST_LAUNCH:
-            return { ...state, latestLaunch: action.payload };
+        case SET_LAUNCHES_SUCCESS:
+            return { ...state, launches: action.payload, pending: false };
+        case SET_LAUNCHES_FAILED:
+            return { ...state, error: action.error, pending: false };
+        case SET_LAUNCHES_PENDING:
+            return { ...state, pending: true };
         default:
             return state;
     }

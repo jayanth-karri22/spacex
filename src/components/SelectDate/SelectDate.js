@@ -6,12 +6,12 @@ import DatePicker from '../common/DatePicker';
 import Row from "../common/Row";
 import Text from "../common/Text";
 
-const SelectDate = ({ getDateQueryParams }) => {
+const SelectDate = ({ getQueryParams }) => {
     const [showCalendar, setShowCalendar] = useState(false);
     const handleToggleCalendar = () => {
         setShowCalendar(!showCalendar);
     }
-    const [filterText, setFilterText] = useState('');
+    const [filterText, setFilterText] = useState('Past 6 months');
 
     const getFilterText = (text) => {
         setFilterText(text);
@@ -24,7 +24,7 @@ const SelectDate = ({ getDateQueryParams }) => {
                 <Text margin={`0 ${PxToRem(8)}`} fontSize={PxToRem(16)} lineHeight={PxToRem(16)} letterSpacing='-0.01em'>{filterText}</Text>
                 <DownArrow />
             </Row>
-            <DatePicker getFilterText={getFilterText} getDateQueryParams={getDateQueryParams} isOpen={showCalendar} closeModal={handleToggleCalendar} />
+            <DatePicker getFilterText={getFilterText} getQueryParams={getQueryParams} isOpen={showCalendar} closeModal={handleToggleCalendar} />
         </>
     )
 }

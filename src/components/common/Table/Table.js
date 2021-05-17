@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
-import { usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
+import { usePagination, useRowSelect, useTable } from 'react-table';
 import styled from 'styled-components';
 import PxToRem from '../../../utils/PxToRem';
+import Pagination from '../Pagination';
 
 const TableWrapper = styled.div`
-  width: 100%;
+  width: ${PxToRem(952)};
+  height: ${PxToRem(676)};
+  margin:0 auto;
   table {
     font-family: Helvetica, sans-serif;
     border-collapse: collapse;
@@ -21,19 +24,20 @@ const TableWrapper = styled.div`
 
   table td,
   table th {
-    padding: 16px;
+    padding: 12px;
   }
 
   table th {
     padding-top: 12px;
     padding-bottom: 12px;
-    align-self: center;
     background: #F4F5F7;
     color: #4B5563;
+    text-align: initial;
+    width:fit-content;
   }
 
   tbody{
-      text-align:center;
+      text-align: initial;
   }
 `;
 
@@ -48,12 +52,22 @@ const Table = ({
         headerGroups,
         prepareRow,
         page,
+        rows,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        state: { pageIndex }
     } = useTable(
         {
             columns,
-            data
+            data,
+            initialState: { pageIndex: 0, pageSize: 12 }
         },
-        useSortBy,
         usePagination,
         useRowSelect
     );
@@ -66,7 +80,7 @@ const Table = ({
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup?.headers?.map((column) => {
                                     return (
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        <th {...column.getHeaderProps()}>
                                             {column.render('Header')}
                                         </th>
                                     );
@@ -92,6 +106,17 @@ const Table = ({
                     })}
                 </tbody>
             </table>
+            <Pagination
+                alignSelf='flex-end'
+                pageIndex={pageIndex}
+                page={pageCount}
+                handlePagination={gotoPage}
+                totalPages={pageOptions.length}
+                previousPage={previousPage}
+                nextPage={nextPage}
+                canNextPage={canNextPage}
+                canPreviousPage={canPreviousPage}>
+            </Pagination>
         </TableWrapper>
     );
 };

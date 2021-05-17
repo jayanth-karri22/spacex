@@ -46,7 +46,7 @@ const StatusWrapper = styled.div`
     padding:${PxToRem(4)} ${PxToRem(12)};
     border-radius: ${PxToRem(20)};
     background: ${props => getStatusBackground(props.status)};
-    margin:0 auto;
+    margin:0;
 `
 
 const Status = ({ status }) => {

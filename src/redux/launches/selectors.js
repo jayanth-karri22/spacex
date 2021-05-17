@@ -1,1 +1,1 @@
-export const getAllLaunchesResults = ({ launches }) => launches.allLaunches;
+export const getLaunchResults = ({ launches }) => launches.launches;

@@ -1,128 +1,67 @@
-import React, { Fragment, useEffect, useMemo } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import Calendar from '../../assets/Icons/Calendar';
-import DownArrow from '../../assets/Icons/DownArrow';
-import Filter from '../../assets/Icons/Filter';
 import Col from '../../components/common/Col';
 import Header from '../../components/common/Header';
 import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
-import Text from '../../components/common/Text';
-import Status from '../../components/Status';
-import { fetchAllLaunches } from '../../redux/launches/actions';
-import { getAllLaunchesResults } from '../../redux/launches/selectors';
+import SelectDate from '../../components/SelectDate';
+import SelectLaunchType from '../../components/SelectLaunchType';
+import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
+import { getLaunchResults } from '../../redux/launches/selectors';
+import { launchTableColumns } from '../../utils/launchTableColumns';
 import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
-    width: 70%;
+    width: ${PxToRem(952)};
     margin: ${PxToRem(16)} auto;
 `
 
-const SelectDate = () => {
-    return (
-        <Row>
-            <Calendar />
-            <Text margin={`0 ${PxToRem(8)}`} fontSize={PxToRem(16)} lineHeight={PxToRem(16)} letterSpacing='-0.01em'>Past 6 months</Text>
-            <DownArrow />
-        </Row>
-    )
-}
-
-const SelectLaunchType = () => {
-    return (
-        <Row justifyContent={'flex-end'}>
-            <Filter />
-            <Text margin={`0 ${PxToRem(8)}`} fontSize={PxToRem(16)} lineHeight={PxToRem(16)} letterSpacing='-0.01em'>All Launches</Text>
-            <DownArrow />
-        </Row>
-    )
-}
-
 const HomePage = () => {
+    const ALL_LAUNCHES = 'All Launches';
+    const UPCOMING_LAUNCHES = 'Upcoming Launches';
+    const SUCCESSFUL_LAUNCHES = 'Successful Launches';
+    const FAILED_LAUNCHES = 'Failed Launches'
+    const [isOpen, setIsOpen] = useState(false);
+    const [selected, setSelected] = useState(ALL_LAUNCHES);
+    const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
+    const toggling = (e, option) => {
+        setIsOpen(!isOpen);
+        setSelected(option);
+    };
     const dispatch = useDispatch();
 
+    const fetchData = {
+        [ALL_LAUNCHES]: fetchLaunches({ ...dateQueryParam }),
+        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches({ ...dateQueryParam }),
+        [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true, ...dateQueryParam }),
+        [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false, ...dateQueryParam })
+    }
+
     useEffect(() => {
-        dispatch(fetchAllLaunches());
-    }, [])
-
-
-    const launches = useSelector(getAllLaunchesResults);
-    const COLUMNS = useMemo(
-        () => [
-            {
-                Header: 'No',
-                accessor: 'flight_number'
-            },
-            {
-                Header: 'Launched(UTC)',
-                accessor: 'launch_date_utc'
-            },
-            {
-                Header: 'Location',
-                accessor: 'launch_site.site_name'
-            },
-            {
-                Header: 'Mission',
-                accessor: 'mission_name'
-            },
-            {
-                Header: 'Orbit',
-                accessor: 'rocket.second_stage.payloads[0].orbit'
-            },
-            {
-                Header: 'Launch Status',
-                accessor: 'launch_success',
-                Cell: (row) => {
-                    return (
-                        <Status status={row?.row?.original?.launch_success} />
-                    )
-                }
-            },
-            {
-                Header: 'Rocket',
-                accessor: 'rocket.rocket_name'
-            }
-        ], []
-    )
-
-    const DUMMY_DATA = [
-        {
-            no: 1,
-            launched: '24 March 2006 at 22:30',
-            location: 'Kwajalein Atoll',
-            mission: 'FalconSat',
-            orbit: 'LEO',
-            status: 'Failed',
-            rocket: 'Falcon 9'
-        },
-        {
-            no: 2,
-            launched: '28 September 2008 23:15',
-            location: 'Kwajalein Atoll',
-            mission: 'RatSat',
-            orbit: 'LEO',
-            status: 'Success',
-            rocket: 'Falcon 9'
-        },
-        {
-            no: 3,
-            launched: '06 December 2020 16:17',
-            location: 'KSC LC 39A',
-            mission: 'CRS-21',
-            orbit: 'ISS',
-            status: 'Upcoming',
-            rocket: 'Falcon 9'
+        if (fetchData[selected]) {
+            dispatch(fetchData[selected])
         }
-    ]
+    }, [dateQueryParam, selected])
+
+    const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
+    const launches = useSelector(getLaunchResults);
+    const COLUMNS = useMemo(
+        () => launchTableColumns, []
+    );
+
+    const getDateQueryParams = (startDate, endDate) => {
+        setDateQueryParam({ start: startDate, end: endDate });
+    }
+
     return (
         <Fragment>
             <Header />
             <ContentContainer>
                 <Col>
-                    <Row>
-                        <SelectDate />
-                        <SelectLaunchType />
+                    <Row margin={`${PxToRem(24)} 0`}>
+                        <SelectDate getDateQueryParams={getDateQueryParams} />
+                        <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
                     </Row>
                     <Row>
                         <Table columns={COLUMNS} tableData={launches} />

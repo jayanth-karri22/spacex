@@ -44,6 +44,7 @@ const TableWrapper = styled.div`
 const Table = ({
     columns,
     tableData,
+    openLaunchCard
 }) => {
     const data = useMemo(() => tableData || [], [tableData]);
     const {
@@ -72,52 +73,54 @@ const Table = ({
         useRowSelect
     );
     return (
-        <TableWrapper>
-            <table {...getTableProps()}>
-                <thead>
-                    {headerGroups?.map(headerGroup => {
-                        return (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup?.headers?.map((column) => {
-                                    return (
-                                        <th {...column.getHeaderProps()}>
-                                            {column.render('Header')}
-                                        </th>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row?.cells?.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <Pagination
-                alignSelf='flex-end'
-                pageIndex={pageIndex}
-                page={pageCount}
-                handlePagination={gotoPage}
-                totalPages={pageOptions.length}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                canNextPage={canNextPage}
-                canPreviousPage={canPreviousPage}>
-            </Pagination>
-        </TableWrapper>
+        <>
+            <TableWrapper>
+                <table {...getTableProps()}>
+                    <thead>
+                        {headerGroups?.map(headerGroup => {
+                            return (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup?.headers?.map((column) => {
+                                        return (
+                                            <th {...column.getHeaderProps()}>
+                                                {column.render('Header')}
+                                            </th>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()} onClick={() => openLaunchCard(row?.original)}>
+                                    {row?.cells?.map((cell) => {
+                                        return (
+                                            <td {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+                <Pagination
+                    alignSelf='flex-end'
+                    pageIndex={pageIndex}
+                    page={pageCount}
+                    handlePagination={gotoPage}
+                    totalPages={pageOptions.length}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    canNextPage={canNextPage}
+                    canPreviousPage={canPreviousPage}>
+                </Pagination>
+            </TableWrapper>
+        </>
     );
 };
 

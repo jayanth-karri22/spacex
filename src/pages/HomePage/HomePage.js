@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Col from '../../components/common/Col';
 import Header from '../../components/common/Header';
 import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
+import LaunchCard from '../../components/LaunchCard';
 import SelectDate from '../../components/SelectDate';
 import SelectLaunchType from '../../components/SelectLaunchType';
 import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
@@ -23,7 +24,9 @@ const HomePage = () => {
     const SUCCESSFUL_LAUNCHES = 'Successful Launches';
     const FAILED_LAUNCHES = 'Failed Launches'
     const [isOpen, setIsOpen] = useState(false);
+    const [launchDetails, setLaunchDetails] = useState({});
     const [selected, setSelected] = useState(ALL_LAUNCHES);
+    const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
     const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
     const toggling = (e, option) => {
         setIsOpen(!isOpen);
@@ -50,12 +53,17 @@ const HomePage = () => {
         () => launchTableColumns, []
     );
 
+    const openLaunchCard = (launch) => {
+        setLaunchDetails(launch);
+        setIsLaunchCardOpen(!isLaunchCardOpen);
+    }
+
     const getDateQueryParams = (startDate, endDate) => {
         setDateQueryParam({ start: startDate, end: endDate });
     }
 
     return (
-        <Fragment>
+        <>
             <Header />
             <ContentContainer>
                 <Col>
@@ -64,12 +72,12 @@ const HomePage = () => {
                         <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
                     </Row>
                     <Row>
-                        <Table columns={COLUMNS} tableData={launches} />
+                        <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} />
                     </Row>
                 </Col>
             </ContentContainer>
-
-        </Fragment>
+            <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} />
+        </>
     )
 }
 

@@ -19,8 +19,6 @@ const Container = styled.div`
 `
 
 const ContentContainer = styled.div`
-    width: ${PxToRem(602)};
-    height: ${PxToRem(259)};
     background: #fff;
     padding: ${PxToRem(16)} ${PxToRem(16)} ${PxToRem(24)} ${PxToRem(16)};
     text-align: center;
@@ -31,13 +29,15 @@ const ContentContainer = styled.div`
 
 const Modal = ({
     isOpen,
-    children
+    children,
+    containerWidth = PxToRem(602),
+    containerHeight = PxToRem(259)
 }) => {
     return (
         isOpen &&
         createPortal(
             <Container>
-                <ContentContainer>{children}</ContentContainer>
+                <ContentContainer style={{ width: containerWidth, height: containerHeight }}>{children}</ContentContainer>
             </Container>,
             modalRoot
         )

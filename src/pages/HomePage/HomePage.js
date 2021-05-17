@@ -1,14 +1,15 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Col from '../../components/common/Col';
 import Header from '../../components/common/Header';
 import Row from '../../components/common/Row';
 import Table from '../../components/common/Table';
+import LaunchCard from '../../components/LaunchCard';
 import SelectDate from '../../components/SelectDate';
 import SelectLaunchType from '../../components/SelectLaunchType';
 import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
-import { getLaunchResults } from '../../redux/launches/selectors';
+import { getLaunchResults, getLoadingState } from '../../redux/launches/selectors';
 import { launchTableColumns } from '../../utils/launchTableColumns';
 import PxToRem from '../../utils/PxToRem';
 
@@ -23,7 +24,9 @@ const HomePage = () => {
     const SUCCESSFUL_LAUNCHES = 'Successful Launches';
     const FAILED_LAUNCHES = 'Failed Launches'
     const [isOpen, setIsOpen] = useState(false);
+    const [launchDetails, setLaunchDetails] = useState({});
     const [selected, setSelected] = useState(ALL_LAUNCHES);
+    const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
     const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
     const toggling = (e, option) => {
         setIsOpen(!isOpen);
@@ -37,12 +40,17 @@ const HomePage = () => {
         [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true, ...dateQueryParam }),
         [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false, ...dateQueryParam })
     }
-
+    const pending = useSelector(getLoadingState);
     useEffect(() => {
         if (fetchData[selected]) {
             dispatch(fetchData[selected])
         }
-    }, [dateQueryParam, selected])
+    }, [selected, dateQueryParam])
+
+
+    const closeLaunchModal = () => {
+        setIsLaunchCardOpen(false);
+    }
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
     const launches = useSelector(getLaunchResults);
@@ -50,26 +58,31 @@ const HomePage = () => {
         () => launchTableColumns, []
     );
 
-    const getDateQueryParams = (startDate, endDate) => {
+    const openLaunchCard = (launch) => {
+        setLaunchDetails(launch);
+        setIsLaunchCardOpen(!isLaunchCardOpen);
+    }
+
+    const getQueryParams = (startDate, endDate) => {
         setDateQueryParam({ start: startDate, end: endDate });
     }
 
     return (
-        <Fragment>
+        <>
             <Header />
             <ContentContainer>
                 <Col>
                     <Row margin={`${PxToRem(24)} 0`}>
-                        <SelectDate getDateQueryParams={getDateQueryParams} />
+                        <SelectDate getQueryParams={getQueryParams} />
                         <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
                     </Row>
                     <Row>
-                        <Table columns={COLUMNS} tableData={launches} />
+                        <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
                     </Row>
                 </Col>
             </ContentContainer>
-
-        </Fragment>
+            <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} closeModal={closeLaunchModal} />
+        </>
     )
 }
 

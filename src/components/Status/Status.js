@@ -49,9 +49,9 @@ const StatusWrapper = styled.div`
     margin:0;
 `
 
-const Status = ({ status }) => {
+const Status = ({ status, ...rest }) => {
     return (
-        <StatusWrapper status={status}><Text marginTop={PxToRem(4)} color={getStatusColor(status)}>{getStatus(status)}</Text></StatusWrapper>
+        <StatusWrapper style={{ ...rest }} status={status}><Text marginTop={PxToRem(4)} color={getStatusColor(status)}>{getStatus(status)}</Text></StatusWrapper>
     )
 }
 

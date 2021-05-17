@@ -43,7 +43,7 @@ const HorizontalRule = styled.hr`
 
 const DefaultDatesRanges = ['Past week', 'Past month', 'Past 3 months', 'Past 6 months', 'Past year', 'Past 2 years'];
 
-const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) => {
+const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText }) => {
     const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()));
     const [endDate, setEndDate] = useState(new Date());
     const [startDateSelected, setStartDateSelected] = useState(false);
@@ -52,7 +52,7 @@ const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) =
 
     useEffect(() => {
         if (dateRangeSelected != null) {
-            getDateQueryParams(startDate, endDate);
+            getQueryParams(startDate, endDate);
             getFilterText(dateRangeSelected);
         }
     }, [dateRangeSelected])
@@ -61,7 +61,7 @@ const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) =
         setStartDateSelected(false);
         setEndDateSelected(false);
         getFilterText(`${monthNames[date1.getMonth()]} ${date1.getDate()} ${date1.getFullYear()} - ${monthNames[date2.getMonth()]} ${date2.getDate()} ${date2.getFullYear()}`);
-        getDateQueryParams(date1, date2);
+        getQueryParams(date1, date2);
         setDateRangeSelected(null);
         closeModal();
     }
@@ -82,7 +82,7 @@ const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) =
         }
     };
 
-    const handleDateRangeSelect = (e, range) => {
+    const handleDateRangeSelect = async (e, range) => {
         const year = new Date().getFullYear();
         const month = new Date().getMonth();
         const date = new Date().getDate();
@@ -90,6 +90,7 @@ const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) =
         switch (range) {
             case 'Past week':
                 setStartDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7));
+                setDateRangeSelected(range);
                 break;
             case 'Past month':
                 setStartDate(new Date(year, month - 1, date));

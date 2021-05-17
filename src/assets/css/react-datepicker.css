@@ -29,22 +29,12 @@
   box-sizing: border-box !important;
 }
 
-.react-datepicker__day--selected{
-  background: #4e71c0;
-  border-radius: 1px;
-  color:#fff;
-}
-
 .react-datepicker__day:hover{
-  background: #4e71c0;
+  background: blue;
   border-radius: 1px;
-  color:#fff;
-}
-
-.react-datepicker__day:active{
-  background: #4e71c0;
-  border-radius: 1px;
-  color:#fff;
+  color: #fff;
+  opacity: 0.2;
+  border-radius: 4px;
 }
 
 .react-datepicker-popper {
@@ -70,4 +60,8 @@
  .react-datepicker__year-text--disabled:hover {
    cursor: not-allowed;
    background: grey;
+ }
+
+ .test{
+   color: purple;
  }

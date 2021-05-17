@@ -24,7 +24,7 @@ const HomePage = () => {
     const FAILED_LAUNCHES = 'Failed Launches'
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(ALL_LAUNCHES);
-    const [dateQueryParam, setDateQueryParam] = useState({ start: '', end: '' });
+    const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
     const toggling = (e, option) => {
         setIsOpen(!isOpen);
         setSelected(option);
@@ -42,7 +42,7 @@ const HomePage = () => {
         if (fetchData[selected]) {
             dispatch(fetchData[selected])
         }
-    }, [selected, dateQueryParam])
+    }, [dateQueryParam, selected])
 
     const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
     const launches = useSelector(getLaunchResults);

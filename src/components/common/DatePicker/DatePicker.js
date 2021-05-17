@@ -44,33 +44,41 @@ const HorizontalRule = styled.hr`
 const DefaultDatesRanges = ['Past week', 'Past month', 'Past 3 months', 'Past 6 months', 'Past year', 'Past 2 years'];
 
 const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) => {
-    const [startDate, setStartDate] = useState('');
+    const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()));
     const [endDate, setEndDate] = useState(new Date());
     const [startDateSelected, setStartDateSelected] = useState(false);
     const [endDateSelected, setEndDateSelected] = useState(false);
-    const [dateRangeSelected, setDateRangeSelected] = useState('All Launches');
+    const [dateRangeSelected, setDateRangeSelected] = useState('Past 6 months');
 
     useEffect(() => {
-        getFilterText(dateRangeSelected);
-        getDateQueryParams(startDate, endDate);
-    }, [startDate, endDate])
+        if (dateRangeSelected != null) {
+            getDateQueryParams(startDate, endDate);
+            getFilterText(dateRangeSelected);
+        }
+    }, [dateRangeSelected])
+
+    const handleCalendarDatesSelected = (date1, date2) => {
+        setStartDateSelected(false);
+        setEndDateSelected(false);
+        getFilterText(`${monthNames[date1.getMonth()]} ${date1.getDate()} ${date1.getFullYear()} - ${monthNames[date2.getMonth()]} ${date2.getDate()} ${date2.getFullYear()}`);
+        getDateQueryParams(date1, date2);
+        setDateRangeSelected(null);
+        closeModal();
+    }
 
     const handleStartDateChange = async (date) => {
-        await setStartDate(date);
-        await setStartDateSelected(true);
+        setStartDate(date);
+        setStartDateSelected(true);
         if (endDateSelected) {
-            setStartDateSelected(false);
-            getFilterText(`${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} - ${monthNames[endDate.getMonth()]} ${endDate.getDate()} ${endDate.getFullYear()}`)
-            await closeModal();
+            handleCalendarDatesSelected(date, endDate);
         }
     };
+
     const handleEndDateChange = async (date) => {
-        await setEndDate(date);
-        await setEndDateSelected(true);
+        setEndDate(date);
+        setEndDateSelected(true);
         if (startDateSelected) {
-            setEndDateSelected(false);
-            getFilterText(`${monthNames[startDate.getMonth()]} ${startDate.getDate()} ${startDate.getFullYear()} - ${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()}`)
-            await closeModal();
+            handleCalendarDatesSelected(startDate, date);
         }
     };
 
@@ -99,16 +107,15 @@ const DatePicker = ({ isOpen, closeModal, getDateQueryParams, getFilterText }) =
                 setStartDate(new Date(year - 2, month, date));
                 break;
             default:
-                setStartDate('');
-                setDateRangeSelected('All Launches');
-                setEndDate('');
+                setStartDate(new Date(year, month - 6, date));
+                setDateRangeSelected('Past 6 months');
                 break;
         }
 
         closeModal();
     }
 
-    const years = Array(20).fill().map((_, idx) => endDate.getFullYear() - idx);
+    const years = Array(20).fill().map((_, idx) => new Date().getFullYear() - idx);
 
     return (
         <Modal isOpen={isOpen}>

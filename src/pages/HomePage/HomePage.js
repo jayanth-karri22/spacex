@@ -1,5 +1,7 @@
+import queryString from 'query-string';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import Col from '../../components/common/Col';
 import Header from '../../components/common/Header';
@@ -18,34 +20,57 @@ const ContentContainer = styled.div`
     margin: ${PxToRem(16)} auto;
 `
 
-const HomePage = () => {
+const HomePage = ({ location }) => {
     const ALL_LAUNCHES = 'All Launches';
     const UPCOMING_LAUNCHES = 'Upcoming Launches';
     const SUCCESSFUL_LAUNCHES = 'Successful Launches';
     const FAILED_LAUNCHES = 'Failed Launches'
     const [isOpen, setIsOpen] = useState(false);
     const [launchDetails, setLaunchDetails] = useState({});
-    const [selected, setSelected] = useState(ALL_LAUNCHES);
+    const urlToSelectMappers = {
+        '/launches': ALL_LAUNCHES,
+        '/launches/upcoming': UPCOMING_LAUNCHES,
+        '/launches?launch_success=true': SUCCESSFUL_LAUNCHES,
+        '/launches?launch_success=false': FAILED_LAUNCHES
+    }
+    const [selected, setSelected] = useState(urlToSelectMappers[`${location.pathname}${location.search}`]);
     const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
     const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
+    const history = useHistory()
+
     const toggling = (e, option) => {
         setIsOpen(!isOpen);
         setSelected(option);
+        if (isOpen) {
+            history.push(selectedToURlMappers[option]);
+        }
     };
+
     const dispatch = useDispatch();
 
     const fetchData = {
-        [ALL_LAUNCHES]: fetchLaunches({ ...dateQueryParam }),
-        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches({ ...dateQueryParam }),
-        [SUCCESSFUL_LAUNCHES]: fetchLaunches({ launch_success: true, ...dateQueryParam }),
-        [FAILED_LAUNCHES]: fetchLaunches({ launch_success: false, ...dateQueryParam })
+        [ALL_LAUNCHES]: fetchLaunches,
+        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches,
+        [SUCCESSFUL_LAUNCHES]: fetchLaunches,
+        [FAILED_LAUNCHES]: fetchLaunches
     }
+
     const pending = useSelector(getLoadingState);
+    const selectedToURlMappers = {
+        [ALL_LAUNCHES]: '/launches',
+        [UPCOMING_LAUNCHES]: '/launches/upcoming',
+        [SUCCESSFUL_LAUNCHES]: '/launches?launch_success=true',
+        [FAILED_LAUNCHES]: '/launches?launch_success=false'
+    }
+
     useEffect(() => {
-        if (fetchData[selected]) {
-            dispatch(fetchData[selected])
-        }
-    }, [selected, dateQueryParam])
+        setSelected(urlToSelectMappers[`${location.pathname}${location.search}`]);
+    }, [location.pathname, location.search]);
+
+    useEffect(() => {
+        const params = queryString.parse(location.search);
+        dispatch(fetchData[urlToSelectMappers[location?.pathname]]({ ...params, ...dateQueryParam }))
+    }, [selected, dateQueryParam, location.search, location.pathname])
 
 
     const closeLaunchModal = () => {

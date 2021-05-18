@@ -120,7 +120,7 @@ const Table = ({
                     </tbody>
                 </table>
                 {
-                    tableData.length === 0 && !loading && <Container><Text lineHeight={PxToRem(14)} fontSize={PxToRem(14)} fontWeight={500} marginTop={PxToRem(48)}>No results found for the specified filter</Text></Container>
+                    tableData?.length === 0 && !loading && <Container><Text lineHeight={PxToRem(14)} fontSize={PxToRem(14)} fontWeight={500} marginTop={PxToRem(48)}>No results found for the specified filter</Text></Container>
                 }
                 {
                     loading && <Container><Loader /></Container>

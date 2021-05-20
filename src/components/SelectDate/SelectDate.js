@@ -6,12 +6,12 @@ import DatePicker from '../common/DatePicker';
 import Row from '../common/Row';
 import Text from '../common/Text';
 
-const SelectDate = ({ getQueryParams, location }) => {
+const SelectDate = ({ getQueryParams, location, getStartQuery }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const handleToggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
-  const [filterText, setFilterText] = useState('Till Date');
+  const [filterText, setFilterText] = useState('Till 6 months');
 
   const getFilterText = text => {
     setFilterText(text);
@@ -27,6 +27,7 @@ const SelectDate = ({ getQueryParams, location }) => {
         <DownArrow />
       </Row>
       <DatePicker
+        getStartQuery={getStartQuery}
         location={location}
         getFilterText={getFilterText}
         getQueryParams={getQueryParams}

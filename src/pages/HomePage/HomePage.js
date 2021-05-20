@@ -21,18 +21,25 @@ const ContentContainer = styled.div`
 `;
 
 const HomePage = ({ location }) => {
-  const startQuery = queryString.parse(location.search).start;
-  const endQuery = queryString.parse(location.search).end;
+  const getStartQuery = () => {
+    let startQuery = queryString.parse(location.search).start;
+    let endQuery = queryString.parse(location.search).end;
+
+    startQuery = startQuery == 'Invalid Date' || startQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth()-6, new Date().getDate()) : startQuery;
+    endQuery = endQuery == 'Invalid Date' || endQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) : endQuery;
+
+    return {start: startQuery, end: endQuery}
+  }
+
   const ALL_LAUNCHES = 'All Launches';
   const UPCOMING_LAUNCHES = 'Upcoming Launches';
   const SUCCESSFUL_LAUNCHES = 'Successful Launches';
   const FAILED_LAUNCHES = 'Failed Launches';
   const [isOpen, setIsOpen] = useState(false);
   const [launchDetails, setLaunchDetails] = useState({});
-  const [dateQueryParam, setDateQueryParam] = useState({
-    start: new Date(startQuery),
-    end: new Date(endQuery)
-  });
+  const [dateQueryParam, setDateQueryParam] = useState(getStartQuery());
+  
+
   const urlToSelectMappers = {
     [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: ALL_LAUNCHES,
     [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: UPCOMING_LAUNCHES,
@@ -80,7 +87,13 @@ const HomePage = ({ location }) => {
   }, [selected, dateQueryParam, location.search, location.pathname]);
 
   useEffect(() => {
-    history.push(`${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
+    if(queryString.parse(location.search).launch_success){
+      history.push(`${location.pathname}&start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
+    }
+    else{
+      history.push(`${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
+    }
+    
   }, [dateQueryParam]);
 
   const closeLaunchModal = () => {
@@ -106,7 +119,7 @@ const HomePage = ({ location }) => {
       <ContentContainer>
         <Col>
           <Row margin={`${PxToRem(24)} 0`}>
-            <SelectDate getQueryParams={getQueryParams} location={location} />
+            <SelectDate getQueryParams={getQueryParams} location={location} getStartQuery={getStartQuery}/>
             <SelectLaunchType
               dropdownOptions={dropdownOptions}
               isOpen={isOpen}

@@ -1,4 +1,3 @@
-import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -42,61 +41,56 @@ const HorizontalRule = styled.hr`
 
 const DefaultDatesRanges = ['Past week', 'Past month', 'Past 3 months', 'Past 6 months', 'Past year', 'Past 2 years'];
 
-const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, location }) => {
-  const startQuery = queryString.parse(location.search).start;
-  const endQuery = queryString.parse(location.search).end;
-  let date1 = new Date(startQuery);
-  let date2 = new Date(endQuery);
+const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, getStartQuery }) => {
+  const date1 = new Date(getStartQuery().start);
+  const date2 = new Date(getStartQuery().end);
+  // let date1 = new Date(startQuery);
+  // let date2 = new Date(endQuery);
   const getInitialDateRange = (date1, date2) => {
-    if (new Date(startQuery) == 'Invalid Date' && new Date(endQuery) == 'Invalid Date') {
-      return 'Till Date';
-    } else {
       if (
         date2.getFullYear() - date1.getFullYear() === 2 &&
-        date2.getMonth() == date1.getMonth() &&
-        date2.getDate() === date1.getDate()
+        date2.getMonth() == date1.getMonth()
       ) {
         return 'Past 2 years';
       }
-      if (
+      else if (
         date2.getFullYear() - date1.getFullYear() === 1 &&
-        date2.getMonth() == date1.getMonth() &&
-        date2.getDate() === date1.getDate()
+        date2.getMonth() == date1.getMonth() 
       ) {
         return 'Past year';
       }
-      if (Math.abs(date2.getMonth() - date1.getMonth()) === 6 && date2.getDate() === date1.getDate()) {
+      else if (Math.abs(date2.getMonth() - date1.getMonth()) === 6 ) {
         return 'Past 6 months';
       }
-      if (Math.abs(date2.getMonth() - date1.getMonth()) === 3 && date2.getDate() === date1.getDate()) {
+      else if (Math.abs(date2.getMonth() - date1.getMonth()) === 3 ) {
+        console.log('HOLA')
         return 'Past 3 months';
       }
-      if (Math.abs(date2.getMonth() - date1.getMonth()) === 1 && date2.getDate() === date1.getDate()) {
+      else if (Math.abs(date2.getMonth() - date1.getMonth()) === 1 ) {
         return 'Past month';
       }
-      if (
-        Math.abs(date2.getDate() - date1.getDate()) === 7 &&
-        date2.getFullYear() === date1.getFullYear() &&
-        date2.getMonth() === date1.getMonth()
+      else if (
+        Math.abs(date2.getDate() - date1.getDate()) === 8
       ) {
         return 'Past week';
-      } else {
+      } 
+      else {
         return getFilterText(
           `${monthNames[date1.getMonth()]} ${date1.getDate()} ${date1.getFullYear()} - ${
             monthNames[date2.getMonth()]
           } ${date2.getDate()} ${date2.getFullYear()}`
         );
       }
-    }
   };
-  const [startDate, setStartDate] = useState(new Date(startQuery));
-  const [endDate, setEndDate] = useState(new Date(endQuery));
+  const [startDate, setStartDate] = useState(date1);
+  const [endDate, setEndDate] = useState(date2);
   const [startDateSelected, setStartDateSelected] = useState(false);
   const [endDateSelected, setEndDateSelected] = useState(false);
   const [dateRangeSelected, setDateRangeSelected] = useState(getInitialDateRange(date1, date2));
 
   useEffect(() => {
-    if (DefaultDatesRanges.indexOf(dateRangeSelected) != -1) {
+    console.log(dateRangeSelected, "DATE RANGE")
+    if (dateRangeSelected != null) {
       getQueryParams(startDate, endDate);
       getFilterText(dateRangeSelected);
       setStartDateSelected(false);
@@ -137,32 +131,28 @@ const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, locatio
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
     const date = new Date().getDate();
-    setDateRangeSelected(range);
     setEndDate(new Date());
     getFilterText(range);
+    setDateRangeSelected(range);
     switch (range) {
       case 'Past week':
         setStartDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7));
-        setEndDate(new Date());
+   
         break;
       case 'Past month':
         setStartDate(new Date(year, month - 1, date));
         break;
       case 'Past 3 months':
         setStartDate(new Date(year, month - 3, date));
-        setEndDate(new Date());
         break;
       case 'Past 6 months':
         setStartDate(new Date(year, month - 6, date));
-        setEndDate(new Date());
         break;
       case 'Past year':
         setStartDate(new Date(year - 1, month, date));
-        setEndDate(new Date());
         break;
       case 'Past 2 years':
         setStartDate(new Date(year - 2, month, date));
-        setEndDate(new Date());
         break;
       default:
         break;
@@ -237,7 +227,7 @@ const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, locatio
           />
           <ReactDatePicker
             inline
-            // minDate={startDate}
+            minDate={startDate}
             renderCustomHeader={({ date, decreaseMonth, increaseMonth, changeMonth, changeYear }) => (
               <>
                 <Row justifyContent='space-between'>

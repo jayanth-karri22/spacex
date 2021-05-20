@@ -1,26 +1,22 @@
-import { getLaunches } from "../../repository/launches/getLaunches";
-import { getUpcomingLaunches } from "../../repository/launches/getUpcomingLaunches";
-import {
-  SET_LAUNCHES_FAILED,
-  SET_LAUNCHES_PENDING,
-  SET_LAUNCHES_SUCCESS,
-} from "./actionTypes";
+import { getLaunches } from '../../repository/launches/getLaunches';
+import { getUpcomingLaunches } from '../../repository/launches/getUpcomingLaunches';
+import { SET_LAUNCHES_FAILED, SET_LAUNCHES_PENDING, SET_LAUNCHES_SUCCESS } from './actionTypes';
 
-export const setLaunchesSuccess = (payload) => ({
+export const setLaunchesSuccess = payload => ({
   type: SET_LAUNCHES_SUCCESS,
-  payload,
+  payload
 });
 
-export const setLaunchesError = (error) => ({
+export const setLaunchesError = error => ({
   type: SET_LAUNCHES_FAILED,
-  error,
+  error
 });
 
 export const setLaunchesPending = () => ({
-  type: SET_LAUNCHES_PENDING,
+  type: SET_LAUNCHES_PENDING
 });
 
-export const fetchLaunches = (queryParams) => async (dispatch) => {
+export const fetchLaunches = queryParams => async dispatch => {
   dispatch(setLaunchesPending());
   try {
     const response = await getLaunches(queryParams);
@@ -30,7 +26,7 @@ export const fetchLaunches = (queryParams) => async (dispatch) => {
   }
 };
 
-export const fetchUpcomingLaunches = (queryParams) => async (dispatch) => {
+export const fetchUpcomingLaunches = queryParams => async dispatch => {
   dispatch(setLaunchesPending());
   try {
     const response = await getUpcomingLaunches(queryParams);

@@ -1,14 +1,14 @@
-import { useState } from "react";
-import styled from "styled-components";
-import Close from "../../assets/Icons/Close";
-import ImageNotFound from "../../assets/images/ImageNotFound.png";
-import { monthNames } from "../../utils/constants";
-import PxToRem from "../../utils/PxToRem";
-import Col from "../common/Col";
-import Modal from "../common/Modal";
-import Row from "../common/Row";
-import Text from "../common/Text";
-import Status from "../Status";
+import { useState } from 'react';
+import styled from 'styled-components';
+import Close from '../../assets/Icons/Close';
+import ImageNotFound from '../../assets/images/ImageNotFound.png';
+import { monthNames } from '../../utils/constants';
+import PxToRem from '../../utils/PxToRem';
+import Col from '../common/Col';
+import Modal from '../common/Modal';
+import Row from '../common/Row';
+import Text from '../common/Text';
+import Status from '../Status';
 
 const Image = styled.img`
   width: ${PxToRem(72)};
@@ -41,34 +41,28 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
   const [fallBackImage, setFallBackImage] = useState(false);
   const payload = launchDetails?.rocket?.second_stage?.payloads[0];
 
-  const getFormattedDate = (utcDate) => {
+  const getFormattedDate = utcDate => {
     const date = new Date(utcDate * 1000);
-    return `${date.getDate()} ${
-      monthNames[date.getMonth()]
-    } ${date.getFullYear()} ${date.toLocaleTimeString([], {
-      timeStyle: "short",
+    return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()} ${date.toLocaleTimeString([], {
+      timeStyle: 'short'
     })}`;
   };
 
   const launchCardDetails = {
-    "Flight Number": launchDetails?.flight_number,
-    "Mission Name": launchDetails?.mission_name,
-    "Rocket Type": launchDetails?.rocket?.rocket_type,
-    "Rocket Name": launchDetails?.rocket?.rocket_name,
+    'Flight Number': launchDetails?.flight_number,
+    'Mission Name': launchDetails?.mission_name,
+    'Rocket Type': launchDetails?.rocket?.rocket_type,
+    'Rocket Name': launchDetails?.rocket?.rocket_name,
     Manufacturer: payload?.manufacturer,
     Nationality: payload?.nationality,
-    "Launch Date": getFormattedDate(launchDetails?.launch_date_unix),
-    "Payload Type": payload?.payload_type,
+    'Launch Date': getFormattedDate(launchDetails?.launch_date_unix),
+    'Payload Type': payload?.payload_type,
     Orbit: payload?.orbit,
-    "Launch Site": launchDetails?.launch_site?.site_name,
+    'Launch Site': launchDetails?.launch_site?.site_name
   };
   return (
-    <Modal
-      isOpen={isOpen}
-      containerHeight={PxToRem(741)}
-      containerWidth={PxToRem(544)}
-    >
-      <Row alignItems={"flex-start"} justifyContent="space-between">
+    <Modal isOpen={isOpen} containerHeight={PxToRem(741)} containerWidth={PxToRem(544)}>
+      <Row alignItems={'flex-start'} justifyContent='space-between'>
         <Row>
           <Image
             src={
@@ -76,41 +70,24 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                 ? ImageNotFound
                 : launchDetails?.links?.mission_patch_small
             }
-            alt="Icon"
-            onError={() => setFallBackImage(true)}
-          ></Image>
+            alt='Icon'
+            onError={() => setFallBackImage(true)}></Image>
           <Info>
             <Row>
-              <Text
-                fontSize={PxToRem(18)}
-                lineHeight={PxToRem(18)}
-                fontWeight={500}
-                color="#1f2937"
-              >
+              <Text fontSize={PxToRem(18)} lineHeight={PxToRem(18)} fontWeight={500} color='#1f2937'>
                 {launchDetails?.mission_name}
               </Text>
-              <Status
-                marginLeft={PxToRem(16)}
-                status={launchDetails?.launch_success}
-              />
+              <Status marginLeft={PxToRem(16)} status={launchDetails?.launch_success} />
             </Row>
-            <Text
-              color="#374151"
-              fontSize={PxToRem(12)}
-              lineHeight={PxToRem(12)}
-            >
+            <Text color='#374151' fontSize={PxToRem(12)} lineHeight={PxToRem(12)}>
               {launchDetails?.rocket?.rocket_name}
             </Text>
-            <Row
-              width={PxToRem(65)}
-              padding={PxToRem(4)}
-              flexDirection="space-betweem"
-            >
+            <Row width={PxToRem(65)} padding={PxToRem(4)} flexDirection='space-betweem'>
               {launchDetails?.links?.article_link && (
                 <Link href={launchDetails?.links?.article_link}>
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
-                    src={require("../../assets/Icons/Nasa.svg").default}
+                    src={require('../../assets/Icons/Nasa.svg').default}
                   />
                 </Link>
               )}
@@ -118,7 +95,7 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                 <Link href={launchDetails?.links?.wikipedia}>
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
-                    src={require("../../assets/Icons/Wiki.svg").default}
+                    src={require('../../assets/Icons/Wiki.svg').default}
                   />
                 </Link>
               )}
@@ -126,26 +103,25 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                 <Link href={launchDetails?.links?.video_link}>
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
-                    src={require("../../assets/Icons/Youtube.svg").default}
+                    src={require('../../assets/Icons/Youtube.svg').default}
                   />
                 </Link>
               )}
             </Row>
           </Info>
         </Row>
-        <Close onClick={closeModal} style={{ cursor: "pointer" }} />
+        <Close onClick={closeModal} style={{ cursor: 'pointer' }} />
       </Row>
       <Row>
         <Text
           padding={PxToRem(8)}
-          textAlign="left"
+          textAlign='left'
           marginTop={PxToRem(16)}
           fontSize={PxToRem(14)}
-          lineHeight={PxToRem(24)}
-        >
-          {launchDetails?.details}{" "}
+          lineHeight={PxToRem(24)}>
+          {launchDetails?.details}{' '}
           {launchDetails?.links?.wikipedia && (
-            <Link color={"#5469d4"} href={launchDetails?.links?.wikipedia}>
+            <Link color={'#5469d4'} href={launchDetails?.links?.wikipedia}>
               Wikipedia.
             </Link>
           )}
@@ -156,21 +132,14 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
           return (
             <>
               <Row>
-                <Text
-                  fontSize={PxToRem(14)}
-                  lineHeight={PxToRem(14)}
-                  width={PxToRem(150)}
-                  textAlign="left"
-                >
+                <Text fontSize={PxToRem(14)} lineHeight={PxToRem(14)} width={PxToRem(150)} textAlign='left'>
                   {detail}
                 </Text>
                 <Text fontSize={PxToRem(14)} lineHeight={PxToRem(14)}>
                   {launchCardDetails[detail]}
                 </Text>
               </Row>
-              {idx != Object.keys(launchCardDetails).length - 1 && (
-                <HorizontalRule />
-              )}
+              {idx != Object.keys(launchCardDetails).length - 1 && <HorizontalRule />}
             </>
           );
         })}

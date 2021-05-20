@@ -1,3 +1,3 @@
-import LaunchCard from "./LaunchCard";
+import LaunchCard from './LaunchCard';
 
 export default LaunchCard;

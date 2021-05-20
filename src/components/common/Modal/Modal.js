@@ -1,9 +1,9 @@
-import React from "react";
-import { createPortal } from "react-dom";
-import styled from "styled-components";
-import PxToRem from "../../../utils/PxToRem";
+import React from 'react';
+import { createPortal } from 'react-dom';
+import styled from 'styled-components';
+import PxToRem from '../../../utils/PxToRem';
 
-const modalRoot = document.getElementById("modal-root");
+const modalRoot = document.getElementById('modal-root');
 
 const Container = styled.div`
   display: flex;
@@ -27,21 +27,12 @@ const ContentContainer = styled.div`
   border-radius: ${PxToRem(8)};
 `;
 
-const Modal = ({
-  isOpen,
-  children,
-  containerWidth = PxToRem(602),
-  containerHeight = PxToRem(259),
-}) => {
+const Modal = ({ isOpen, children, containerWidth = PxToRem(602), containerHeight = PxToRem(259) }) => {
   return (
     isOpen &&
     createPortal(
       <Container>
-        <ContentContainer
-          style={{ width: containerWidth, height: containerHeight }}
-        >
-          {children}
-        </ContentContainer>
+        <ContentContainer style={{ width: containerWidth, height: containerHeight }}>{children}</ContentContainer>
       </Container>,
       modalRoot
     )

@@ -1,42 +1,42 @@
-import React from "react";
-import styled from "styled-components";
-import PxToRem from "../../utils/PxToRem";
-import Text from "../common/Text";
+import React from 'react';
+import styled from 'styled-components';
+import PxToRem from '../../utils/PxToRem';
+import Text from '../common/Text';
 
-const getStatusBackground = (status) => {
+const getStatusBackground = status => {
   switch (status) {
     case true:
-      return "#DEF7EC";
+      return '#DEF7EC';
     case false:
-      return "#FDE2E1";
+      return '#FDE2E1';
     case null:
-      return "#FEF3C7";
+      return '#FEF3C7';
     default:
-      return "#FEF3C7";
+      return '#FEF3C7';
   }
 };
 
-const getStatusColor = (status) => {
+const getStatusColor = status => {
   switch (status) {
     case true:
-      return "#03543F";
+      return '#03543F';
     case false:
-      return "#981B1C";
+      return '#981B1C';
     case null:
-      return "#92400F";
+      return '#92400F';
     default:
-      return "#92400F";
+      return '#92400F';
   }
 };
 
-const getStatus = (status) => {
+const getStatus = status => {
   switch (status) {
     case true:
-      return "Success";
+      return 'Success';
     case false:
-      return "Failed";
+      return 'Failed';
     case null:
-      return "Upcoming";
+      return 'Upcoming';
   }
 };
 
@@ -45,7 +45,7 @@ const StatusWrapper = styled.div`
   height: ${PxToRem(21)};
   padding: ${PxToRem(4)} ${PxToRem(12)};
   border-radius: ${PxToRem(20)};
-  background: ${(props) => getStatusBackground(props.status)};
+  background: ${props => getStatusBackground(props.status)};
   margin: 0;
 `;
 

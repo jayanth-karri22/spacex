@@ -1,18 +1,18 @@
-import queryString from "query-string";
-import { useEffect, useState } from "react";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import styled from "styled-components";
-import "../../../assets/css/react-datepicker.css";
-import LeftArrow from "../../../assets/Icons/LeftArrow";
-import RightArrow from "../../../assets/Icons/RightArrow";
-import SelectIcon from "../../../assets/Icons/Select";
-import { monthNames } from "../../../utils/constants";
-import PxToRem from "../../../utils/PxToRem";
-import Col from "../Col";
-import Modal from "../Modal";
-import Row from "../Row";
-import Text from "../Text";
+import queryString from 'query-string';
+import { useEffect, useState } from 'react';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import styled from 'styled-components';
+import '../../../assets/css/react-datepicker.css';
+import LeftArrow from '../../../assets/Icons/LeftArrow';
+import RightArrow from '../../../assets/Icons/RightArrow';
+import SelectIcon from '../../../assets/Icons/Select';
+import { monthNames } from '../../../utils/constants';
+import PxToRem from '../../../utils/PxToRem';
+import Col from '../Col';
+import Modal from '../Modal';
+import Row from '../Row';
+import Text from '../Text';
 
 const DatePickerWrapper = styled.div``;
 const Select = styled.select`
@@ -40,76 +40,49 @@ const HorizontalRule = styled.hr`
   opacity: 0.4;
 `;
 
-const DefaultDatesRanges = [
-  "Past week",
-  "Past month",
-  "Past 3 months",
-  "Past 6 months",
-  "Past year",
-  "Past 2 years",
-];
+const DefaultDatesRanges = ['Past week', 'Past month', 'Past 3 months', 'Past 6 months', 'Past year', 'Past 2 years'];
 
-const DatePicker = ({
-  isOpen,
-  closeModal,
-  getQueryParams,
-  getFilterText,
-  location,
-}) => {
+const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, location }) => {
   const startQuery = queryString.parse(location.search).start;
   const endQuery = queryString.parse(location.search).end;
   let date1 = new Date(startQuery);
   let date2 = new Date(endQuery);
   const getInitialDateRange = (date1, date2) => {
-    if (
-      new Date(startQuery) == "Invalid Date" &&
-      new Date(endQuery) == "Invalid Date"
-    ) {
-      return "Till Date";
+    if (new Date(startQuery) == 'Invalid Date' && new Date(endQuery) == 'Invalid Date') {
+      return 'Till Date';
     } else {
       if (
         date2.getFullYear() - date1.getFullYear() === 2 &&
         date2.getMonth() == date1.getMonth() &&
         date2.getDate() === date1.getDate()
       ) {
-        return "Past 2 years";
+        return 'Past 2 years';
       }
       if (
         date2.getFullYear() - date1.getFullYear() === 1 &&
         date2.getMonth() == date1.getMonth() &&
         date2.getDate() === date1.getDate()
       ) {
-        return "Past year";
+        return 'Past year';
       }
-      if (
-        Math.abs(date2.getMonth() - date1.getMonth()) === 6 &&
-        date2.getDate() === date1.getDate()
-      ) {
-        return "Past 6 months";
+      if (Math.abs(date2.getMonth() - date1.getMonth()) === 6 && date2.getDate() === date1.getDate()) {
+        return 'Past 6 months';
       }
-      if (
-        Math.abs(date2.getMonth() - date1.getMonth()) === 3 &&
-        date2.getDate() === date1.getDate()
-      ) {
-        return "Past 3 months";
+      if (Math.abs(date2.getMonth() - date1.getMonth()) === 3 && date2.getDate() === date1.getDate()) {
+        return 'Past 3 months';
       }
-      if (
-        Math.abs(date2.getMonth() - date1.getMonth()) === 1 &&
-        date2.getDate() === date1.getDate()
-      ) {
-        return "Past month";
+      if (Math.abs(date2.getMonth() - date1.getMonth()) === 1 && date2.getDate() === date1.getDate()) {
+        return 'Past month';
       }
       if (
         Math.abs(date2.getDate() - date1.getDate()) === 7 &&
         date2.getFullYear() === date1.getFullYear() &&
         date2.getMonth() === date1.getMonth()
       ) {
-        return "Past week";
+        return 'Past week';
       } else {
         return getFilterText(
-          `${
-            monthNames[date1.getMonth()]
-          } ${date1.getDate()} ${date1.getFullYear()} - ${
+          `${monthNames[date1.getMonth()]} ${date1.getDate()} ${date1.getFullYear()} - ${
             monthNames[date2.getMonth()]
           } ${date2.getDate()} ${date2.getFullYear()}`
         );
@@ -120,9 +93,7 @@ const DatePicker = ({
   const [endDate, setEndDate] = useState(new Date(endQuery));
   const [startDateSelected, setStartDateSelected] = useState(false);
   const [endDateSelected, setEndDateSelected] = useState(false);
-  const [dateRangeSelected, setDateRangeSelected] = useState(
-    getInitialDateRange(date1, date2)
-  );
+  const [dateRangeSelected, setDateRangeSelected] = useState(getInitialDateRange(date1, date2));
 
   useEffect(() => {
     if (DefaultDatesRanges.indexOf(dateRangeSelected) != -1) {
@@ -137,9 +108,7 @@ const DatePicker = ({
     setStartDateSelected(false);
     setEndDateSelected(false);
     getFilterText(
-      `${
-        monthNames[date1.getMonth()]
-      } ${date1.getDate()} ${date1.getFullYear()} - ${
+      `${monthNames[date1.getMonth()]} ${date1.getDate()} ${date1.getFullYear()} - ${
         monthNames[date2.getMonth()]
       } ${date2.getDate()} ${date2.getFullYear()}`
     );
@@ -148,7 +117,7 @@ const DatePicker = ({
     closeModal();
   };
 
-  const handleStartDateChange = async (date) => {
+  const handleStartDateChange = async date => {
     setStartDate(date);
     setStartDateSelected(true);
     if (endDateSelected) {
@@ -156,7 +125,7 @@ const DatePicker = ({
     }
   };
 
-  const handleEndDateChange = async (date) => {
+  const handleEndDateChange = async date => {
     setEndDate(date);
     setEndDateSelected(true);
     if (startDateSelected) {
@@ -172,32 +141,26 @@ const DatePicker = ({
     setEndDate(new Date());
     getFilterText(range);
     switch (range) {
-      case "Past week":
-        setStartDate(
-          new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            new Date().getDate() - 7
-          )
-        );
+      case 'Past week':
+        setStartDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7));
         setEndDate(new Date());
         break;
-      case "Past month":
+      case 'Past month':
         setStartDate(new Date(year, month - 1, date));
         break;
-      case "Past 3 months":
+      case 'Past 3 months':
         setStartDate(new Date(year, month - 3, date));
         setEndDate(new Date());
         break;
-      case "Past 6 months":
+      case 'Past 6 months':
         setStartDate(new Date(year, month - 6, date));
         setEndDate(new Date());
         break;
-      case "Past year":
+      case 'Past year':
         setStartDate(new Date(year - 1, month, date));
         setEndDate(new Date());
         break;
-      case "Past 2 years":
+      case 'Past 2 years':
         setStartDate(new Date(year - 2, month, date));
         setEndDate(new Date());
         break;
@@ -214,18 +177,17 @@ const DatePicker = ({
 
   return (
     <Modal isOpen={isOpen}>
-      <DatePickerWrapper style={{ cursor: "pointer" }}>
+      <DatePickerWrapper style={{ cursor: 'pointer' }}>
         <Row>
-          <Col alignSelf="flex-start" marginTop={PxToRem(4)}>
-            {DefaultDatesRanges.map((dateRange) => (
-              <div onClick={(e) => handleDateRangeSelect(e, dateRange)}>
+          <Col alignSelf='flex-start' marginTop={PxToRem(4)}>
+            {DefaultDatesRanges.map(dateRange => (
+              <div onClick={e => handleDateRangeSelect(e, dateRange)}>
                 <Text
                   fontSize={PxToRem(14)}
                   lineHeight={PxToRem(16)}
                   fontWeight={400}
-                  color="black"
-                  marginBottom={PxToRem(16)}
-                >
+                  color='black'
+                  marginBottom={PxToRem(16)}>
                   {dateRange}
                 </Text>
               </div>
@@ -235,29 +197,17 @@ const DatePicker = ({
 
           <ReactDatePicker
             inline
-            maxDate={endDate != "Invalid Date" ? endDate : new Date()}
-            renderCustomHeader={({
-              date,
-              decreaseMonth,
-              increaseMonth,
-              changeMonth,
-              changeYear,
-            }) => (
+            maxDate={endDate != 'Invalid Date' ? endDate : new Date()}
+            renderCustomHeader={({ date, decreaseMonth, increaseMonth, changeMonth, changeYear }) => (
               <>
-                <Row justifyContent="space-between">
-                  <LeftArrow
-                    onClick={decreaseMonth}
-                    style={{ marginLeft: PxToRem(16) }}
-                  />
-                  <div style={{ display: "flex", marginLeft: PxToRem(-48) }}>
+                <Row justifyContent='space-between'>
+                  <LeftArrow onClick={decreaseMonth} style={{ marginLeft: PxToRem(16) }} />
+                  <div style={{ display: 'flex', marginLeft: PxToRem(-48) }}>
                     <Select
                       style={{ padding: 0 }}
                       value={monthNames[date.getMonth()]}
-                      onChange={({ target: { value } }) =>
-                        changeMonth(monthNames.indexOf(value))
-                      }
-                    >
-                      {monthNames.map((option) => (
+                      onChange={({ target: { value } }) => changeMonth(monthNames.indexOf(value))}>
+                      {monthNames.map(option => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -269,9 +219,8 @@ const DatePicker = ({
                     <Select
                       style={{ padding: 0 }}
                       value={date.getFullYear()}
-                      onChange={({ target: { value } }) => changeYear(value)}
-                    >
-                      {years.map((option) => (
+                      onChange={({ target: { value } }) => changeYear(value)}>
+                      {years.map(option => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -283,36 +232,26 @@ const DatePicker = ({
                 <HorizontalRule />
               </>
             )}
-            selected={new Date(startDate) != "Invalid Date" && startDate}
+            selected={new Date(startDate) != 'Invalid Date' && startDate}
             onChange={handleStartDateChange}
           />
           <ReactDatePicker
             inline
             // minDate={startDate}
-            renderCustomHeader={({
-              date,
-              decreaseMonth,
-              increaseMonth,
-              changeMonth,
-              changeYear,
-            }) => (
+            renderCustomHeader={({ date, decreaseMonth, increaseMonth, changeMonth, changeYear }) => (
               <>
-                <Row justifyContent="space-between">
+                <Row justifyContent='space-between'>
                   <div
                     style={{
-                      display: "flex",
+                      display: 'flex',
                       marginLeft: PxToRem(24),
-                      width: PxToRem(100),
-                    }}
-                  >
+                      width: PxToRem(100)
+                    }}>
                     <Select
                       style={{ padding: 0 }}
                       value={monthNames[date.getMonth()]}
-                      onChange={({ target: { value } }) =>
-                        changeMonth(monthNames.indexOf(value))
-                      }
-                    >
-                      {monthNames.map((option) => (
+                      onChange={({ target: { value } }) => changeMonth(monthNames.indexOf(value))}>
+                      {monthNames.map(option => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -324,9 +263,8 @@ const DatePicker = ({
                     <Select
                       style={{ padding: 0 }}
                       value={date.getFullYear()}
-                      onChange={({ target: { value } }) => changeYear(value)}
-                    >
-                      {years.map((option) => (
+                      onChange={({ target: { value } }) => changeYear(value)}>
+                      {years.map(option => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -334,15 +272,12 @@ const DatePicker = ({
                     </Select>
                     <SelectIcon />
                   </div>
-                  <RightArrow
-                    onClick={increaseMonth}
-                    style={{ marginRight: PxToRem(16) }}
-                  />
+                  <RightArrow onClick={increaseMonth} style={{ marginRight: PxToRem(16) }} />
                 </Row>
                 <HorizontalRule />
               </>
             )}
-            selected={new Date(endDate) != "Invalid Date" && endDate}
+            selected={new Date(endDate) != 'Invalid Date' && endDate}
             onChange={handleEndDateChange}
           />
         </Row>

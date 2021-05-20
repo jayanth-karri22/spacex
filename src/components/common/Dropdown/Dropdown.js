@@ -1,14 +1,14 @@
-import React from "react";
-import styled from "styled-components";
-import PxToRem from "../../../utils/PxToRem";
-import Text from "../Text";
+import React from 'react';
+import styled from 'styled-components';
+import PxToRem from '../../../utils/PxToRem';
+import Text from '../Text';
 
-const DropDownContainer = styled("div")`
+const DropDownContainer = styled('div')`
   width: ${PxToRem(170)};
   height: ${PxToRem(30)};
 `;
 
-const DropDownHeader = styled("div")`
+const DropDownHeader = styled('div')`
   cursor: pointer;
   display: flex;
   font-family: Helvetica Neue, sans-serif;
@@ -25,11 +25,11 @@ const DropDownHeader = styled("div")`
   text-overflow: ellipsis;
 `;
 
-const DropDownListContainer = styled("div")`
+const DropDownListContainer = styled('div')`
   width: ${PxToRem(170)};
   height: ${PxToRem(128)};
 `;
-const DropDownList = styled("ul")`
+const DropDownList = styled('ul')`
   background: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
@@ -44,7 +44,7 @@ const DropDownList = styled("ul")`
   padding: 0px;
 `;
 
-const ListItem = styled("li")`
+const ListItem = styled('li')`
   list-style: none;
   cursor: pointer;
   font-family: Helvetica Neue, sans-serif;
@@ -92,19 +92,15 @@ const ListItem = styled("li")`
 const Dropdown = ({ options, selected, toggling, isOpen, ...rest }) => {
   return (
     <DropDownContainer style={{ ...rest }} isOpen={isOpen}>
-      <DropDownHeader
-        style={{ ...rest }}
-        onClick={(e) => toggling(e, selected)}
-      >
+      <DropDownHeader style={{ ...rest }} onClick={e => toggling(e, selected)}>
         <div>
           <Text
-            whiteSpace="nowrap"
-            display="inline-block"
-            textOverflow="ellipsis"
-            overflow="hidden"
+            whiteSpace='nowrap'
+            display='inline-block'
+            textOverflow='ellipsis'
+            overflow='hidden'
             fontSize={PxToRem(16)}
-            lineHeight={PxToRem(21)}
-          >
+            lineHeight={PxToRem(21)}>
             {selected}
           </Text>
         </div>
@@ -116,14 +112,13 @@ const Dropdown = ({ options, selected, toggling, isOpen, ...rest }) => {
               return (
                 <ListItem key={idx}>
                   <a
-                    onClick={(e) => toggling(e, option)}
+                    onClick={e => toggling(e, option)}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "block",
-                      textDecoration: "none",
-                    }}
-                  >
+                      width: '100%',
+                      height: '100%',
+                      display: 'block',
+                      textDecoration: 'none'
+                    }}>
                     {option}
                   </a>
                 </ListItem>

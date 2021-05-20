@@ -1,13 +1,9 @@
-import {
-  SET_LAUNCHES_FAILED,
-  SET_LAUNCHES_PENDING,
-  SET_LAUNCHES_SUCCESS,
-} from "./actionTypes";
+import { SET_LAUNCHES_FAILED, SET_LAUNCHES_PENDING, SET_LAUNCHES_SUCCESS } from './actionTypes';
 
 const initialState = {
   launches: [],
   pending: null,
-  error: null,
+  error: null
 };
 
 export default (state = initialState, action) => {

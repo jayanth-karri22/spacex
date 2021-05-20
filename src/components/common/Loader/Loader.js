@@ -1,6 +1,6 @@
-import styled, { keyframes } from "styled-components";
-import LoadingSpinner from "../../../assets/Icons/LoadingSpinner";
-import PxToRem from "../../../utils/PxToRem";
+import styled, { keyframes } from 'styled-components';
+import LoadingSpinner from '../../../assets/Icons/LoadingSpinner';
+import PxToRem from '../../../utils/PxToRem';
 
 const rotate = keyframes`
   from {

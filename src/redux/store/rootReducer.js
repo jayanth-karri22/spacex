@@ -1,6 +1,6 @@
-import { combineReducers } from "redux";
-import launches from "../launches/reducers";
+import { combineReducers } from 'redux';
+import launches from '../launches/reducers';
 
 export default combineReducers({
-  launches,
+  launches
 });

@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import Next from "../../../assets/Icons/Next";
-import Previous from "../../../assets/Icons/Previous";
-import PxToRem from "../../../utils/PxToRem";
-import Text from "../Text";
+import styled from 'styled-components';
+import Next from '../../../assets/Icons/Next';
+import Previous from '../../../assets/Icons/Previous';
+import PxToRem from '../../../utils/PxToRem';
+import Text from '../Text';
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -46,15 +46,11 @@ const Pagination = ({
   previousPage,
   nextPage,
   canNextPage,
-  totalPages,
+  totalPages
 }) => {
   return (
     <PaginationWrapper>
-      <PageItem
-        borderRadius={PxToRem(26)}
-        disabled={!canPreviousPage}
-        onClick={previousPage}
-      >
+      <PageItem borderRadius={PxToRem(26)} disabled={!canPreviousPage} onClick={previousPage}>
         <Previous />
       </PageItem>
       {totalPages > pageIndex + 1 && (

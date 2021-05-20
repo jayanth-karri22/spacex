@@ -1,25 +1,19 @@
-import queryString from "query-string";
-import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import styled from "styled-components";
-import Col from "../../components/common/Col";
-import Header from "../../components/common/Header";
-import Row from "../../components/common/Row";
-import Table from "../../components/common/Table";
-import LaunchCard from "../../components/LaunchCard";
-import SelectDate from "../../components/SelectDate";
-import SelectLaunchType from "../../components/SelectLaunchType";
-import {
-  fetchLaunches,
-  fetchUpcomingLaunches,
-} from "../../redux/launches/actions";
-import {
-  getLaunchResults,
-  getLoadingState,
-} from "../../redux/launches/selectors";
-import { launchTableColumns } from "../../utils/launchTableColumns";
-import PxToRem from "../../utils/PxToRem";
+import queryString from 'query-string';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import Col from '../../components/common/Col';
+import Header from '../../components/common/Header';
+import Row from '../../components/common/Row';
+import Table from '../../components/common/Table';
+import LaunchCard from '../../components/LaunchCard';
+import SelectDate from '../../components/SelectDate';
+import SelectLaunchType from '../../components/SelectLaunchType';
+import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
+import { getLaunchResults, getLoadingState } from '../../redux/launches/selectors';
+import { launchTableColumns } from '../../utils/launchTableColumns';
+import PxToRem from '../../utils/PxToRem';
 
 const ContentContainer = styled.div`
   width: ${PxToRem(952)};
@@ -29,29 +23,23 @@ const ContentContainer = styled.div`
 const HomePage = ({ location }) => {
   const startQuery = queryString.parse(location.search).start;
   const endQuery = queryString.parse(location.search).end;
-  const ALL_LAUNCHES = "All Launches";
-  const UPCOMING_LAUNCHES = "Upcoming Launches";
-  const SUCCESSFUL_LAUNCHES = "Successful Launches";
-  const FAILED_LAUNCHES = "Failed Launches";
+  const ALL_LAUNCHES = 'All Launches';
+  const UPCOMING_LAUNCHES = 'Upcoming Launches';
+  const SUCCESSFUL_LAUNCHES = 'Successful Launches';
+  const FAILED_LAUNCHES = 'Failed Launches';
   const [isOpen, setIsOpen] = useState(false);
   const [launchDetails, setLaunchDetails] = useState({});
   const [dateQueryParam, setDateQueryParam] = useState({
     start: new Date(startQuery),
-    end: new Date(endQuery),
+    end: new Date(endQuery)
   });
   const urlToSelectMappers = {
-    [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
-      ALL_LAUNCHES,
-    [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
-      UPCOMING_LAUNCHES,
-    [`/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
-      SUCCESSFUL_LAUNCHES,
-    [`/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
-      FAILED_LAUNCHES,
+    [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: ALL_LAUNCHES,
+    [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: UPCOMING_LAUNCHES,
+    [`/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: SUCCESSFUL_LAUNCHES,
+    [`/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: FAILED_LAUNCHES
   };
-  const [selected, setSelected] = useState(
-    urlToSelectMappers[`${location.pathname}${location.search}`]
-  );
+  const [selected, setSelected] = useState(urlToSelectMappers[`${location.pathname}${location.search}`]);
   const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
   const history = useHistory();
   const toggling = (e, option) => {
@@ -69,7 +57,7 @@ const HomePage = ({ location }) => {
     [ALL_LAUNCHES]: `/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
     [UPCOMING_LAUNCHES]: `/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
     [SUCCESSFUL_LAUNCHES]: `/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
-    [FAILED_LAUNCHES]: `/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
+    [FAILED_LAUNCHES]: `/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`
   };
 
   useEffect(() => {
@@ -78,41 +66,31 @@ const HomePage = ({ location }) => {
 
   useEffect(() => {
     let params = {
-      launch_success: queryString.parse(location.search).launch_success,
+      launch_success: queryString.parse(location.search).launch_success
     };
-    if (
-      dateQueryParam.start != "Invalid Date" &&
-      dateQueryParam.end != "Invalid Date"
-    ) {
+    if (dateQueryParam.start != 'Invalid Date' && dateQueryParam.end != 'Invalid Date') {
       params = { ...params, ...dateQueryParam };
     }
 
-    if (location.pathname === "/launches") {
+    if (location.pathname === '/launches') {
       dispatch(fetchLaunches({ ...params }));
-    } else if (location.pathname === "/launches/upcoming") {
+    } else if (location.pathname === '/launches/upcoming') {
       dispatch(fetchUpcomingLaunches({ ...params }));
     }
   }, [selected, dateQueryParam, location.search, location.pathname]);
 
   useEffect(() => {
-    history.push(
-      `${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`
-    );
+    history.push(`${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
   }, [dateQueryParam]);
 
   const closeLaunchModal = () => {
     setIsLaunchCardOpen(false);
   };
-  const dropdownOptions = [
-    ALL_LAUNCHES,
-    UPCOMING_LAUNCHES,
-    SUCCESSFUL_LAUNCHES,
-    FAILED_LAUNCHES,
-  ];
+  const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
   const launches = useSelector(getLaunchResults);
   const COLUMNS = useMemo(() => launchTableColumns, []);
 
-  const openLaunchCard = (launch) => {
+  const openLaunchCard = launch => {
     setLaunchDetails(launch);
     setIsLaunchCardOpen(!isLaunchCardOpen);
   };
@@ -137,20 +115,11 @@ const HomePage = ({ location }) => {
             />
           </Row>
           <Row>
-            <Table
-              columns={COLUMNS}
-              tableData={launches}
-              openLaunchCard={openLaunchCard}
-              loading={pending}
-            />
+            <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
           </Row>
         </Col>
       </ContentContainer>
-      <LaunchCard
-        launchDetails={launchDetails}
-        isOpen={isLaunchCardOpen}
-        closeModal={closeLaunchModal}
-      />
+      <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} closeModal={closeLaunchModal} />
     </>
   );
 };

@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
-import { usePagination, useRowSelect, useTable } from "react-table";
-import styled from "styled-components";
-import PxToRem from "../../../utils/PxToRem";
-import Loader from "../Loader";
-import Pagination from "../Pagination";
-import Text from "../Text";
+import React, { useMemo } from 'react';
+import { usePagination, useRowSelect, useTable } from 'react-table';
+import styled from 'styled-components';
+import PxToRem from '../../../utils/PxToRem';
+import Loader from '../Loader';
+import Pagination from '../Pagination';
+import Text from '../Text';
 
 const TableWrapper = styled.div`
   width: ${PxToRem(952)};
@@ -68,12 +68,12 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex },
+    state: { pageIndex }
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 12 },
+      initialState: { pageIndex: 0, pageSize: 12 }
     },
     usePagination,
     useRowSelect
@@ -83,15 +83,11 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
       <TableWrapper>
         <table {...getTableProps()}>
           <thead>
-            {headerGroups?.map((headerGroup) => {
+            {headerGroups?.map(headerGroup => {
               return (
                 <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup?.headers?.map((column) => {
-                    return (
-                      <th {...column.getHeaderProps()}>
-                        {column.render("Header")}
-                      </th>
-                    );
+                  {headerGroup?.headers?.map(column => {
+                    return <th {...column.getHeaderProps()}>{column.render('Header')}</th>;
                   })}
                 </tr>
               );
@@ -99,17 +95,12 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
           </thead>
           <tbody {...getTableBodyProps()}>
             {!loading &&
-              page.map((row) => {
+              page.map(row => {
                 prepareRow(row);
                 return (
-                  <tr
-                    {...row.getRowProps()}
-                    onClick={() => openLaunchCard(row?.original)}
-                  >
-                    {row?.cells?.map((cell) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                      );
+                  <tr {...row.getRowProps()} onClick={() => openLaunchCard(row?.original)}>
+                    {row?.cells?.map(cell => {
+                      return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
                     })}
                   </tr>
                 );
@@ -118,12 +109,7 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
         </table>
         {tableData?.length === 0 && !loading && (
           <Container>
-            <Text
-              lineHeight={PxToRem(14)}
-              fontSize={PxToRem(14)}
-              fontWeight={500}
-              marginTop={PxToRem(48)}
-            >
+            <Text lineHeight={PxToRem(14)} fontSize={PxToRem(14)} fontWeight={500} marginTop={PxToRem(48)}>
               No results found for the specified filter
             </Text>
           </Container>
@@ -135,7 +121,7 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
         )}
 
         <Pagination
-          alignSelf="flex-end"
+          alignSelf='flex-end'
           pageIndex={pageIndex}
           page={pageCount}
           handlePagination={gotoPage}
@@ -143,8 +129,7 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
           previousPage={previousPage}
           nextPage={nextPage}
           canNextPage={canNextPage}
-          canPreviousPage={canPreviousPage}
-        ></Pagination>
+          canPreviousPage={canPreviousPage}></Pagination>
       </TableWrapper>
     </>
   );

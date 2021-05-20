@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import PxToRem from "../../../utils/PxToRem";
+import styled from 'styled-components';
+import PxToRem from '../../../utils/PxToRem';
 
 const StyledText = styled.p`
   font-family: Helvetica Neue, sans-serif;
@@ -15,12 +15,12 @@ const StyledText = styled.p`
 const Text = ({
   children,
   fontSize = PxToRem(12),
-  color = "#03543F",
+  color = '#03543F',
   fontWeight = 500,
-  textAlign = "center",
+  textAlign = 'center',
   lineHeight = PxToRem(13),
   style,
-  width = "auto",
+  width = 'auto',
   ...rest
 }) => {
   return (
@@ -33,9 +33,8 @@ const Text = ({
         textAlign,
         lineHeight,
         ...style,
-        ...rest,
-      }}
-    >
+        ...rest
+      }}>
       {children}
     </StyledText>
   );

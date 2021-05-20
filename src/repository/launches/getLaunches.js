@@ -1,10 +1,10 @@
-import { LAUNCHES } from "../../config/urls";
-import axios from "../../http-client";
+import { LAUNCHES } from '../../config/urls';
+import axios from '../../http-client';
 
-const getLaunches = async (queryParams) => {
+const getLaunches = async queryParams => {
   try {
     let response = await axios.get(LAUNCHES.ALL_LAUNCHES, {
-      params: queryParams,
+      params: queryParams
     });
     return response;
   } catch (error) {

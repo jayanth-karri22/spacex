@@ -1,114 +1,158 @@
-import queryString from 'query-string';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import queryString from "query-string";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import styled from 'styled-components';
-import Col from '../../components/common/Col';
-import Header from '../../components/common/Header';
-import Row from '../../components/common/Row';
-import Table from '../../components/common/Table';
-import LaunchCard from '../../components/LaunchCard';
-import SelectDate from '../../components/SelectDate';
-import SelectLaunchType from '../../components/SelectLaunchType';
-import { fetchLaunches, fetchUpcomingLaunches } from '../../redux/launches/actions';
-import { getLaunchResults, getLoadingState } from '../../redux/launches/selectors';
-import { launchTableColumns } from '../../utils/launchTableColumns';
-import PxToRem from '../../utils/PxToRem';
+import styled from "styled-components";
+import Col from "../../components/common/Col";
+import Header from "../../components/common/Header";
+import Row from "../../components/common/Row";
+import Table from "../../components/common/Table";
+import LaunchCard from "../../components/LaunchCard";
+import SelectDate from "../../components/SelectDate";
+import SelectLaunchType from "../../components/SelectLaunchType";
+import {
+    fetchLaunches,
+    fetchUpcomingLaunches
+} from "../../redux/launches/actions";
+import {
+    getLaunchResults,
+    getLoadingState
+} from "../../redux/launches/selectors";
+import { launchTableColumns } from "../../utils/launchTableColumns";
+import PxToRem from "../../utils/PxToRem";
 
 const ContentContainer = styled.div`
-    width: ${PxToRem(952)};
-    margin: ${PxToRem(16)} auto;
-`
+  width: ${PxToRem(952)};
+  margin: ${PxToRem(16)} auto;
+`;
 
 const HomePage = ({ location }) => {
-    const ALL_LAUNCHES = 'All Launches';
-    const UPCOMING_LAUNCHES = 'Upcoming Launches';
-    const SUCCESSFUL_LAUNCHES = 'Successful Launches';
-    const FAILED_LAUNCHES = 'Failed Launches'
-    const [isOpen, setIsOpen] = useState(false);
-    const [launchDetails, setLaunchDetails] = useState({});
-    const urlToSelectMappers = {
-        '/launches': ALL_LAUNCHES,
-        '/launches/upcoming': UPCOMING_LAUNCHES,
-        '/launches?launch_success=true': SUCCESSFUL_LAUNCHES,
-        '/launches?launch_success=false': FAILED_LAUNCHES
+  const startQuery = queryString.parse(location.search).start;
+  const endQuery = queryString.parse(location.search).end;
+  const ALL_LAUNCHES = "All Launches";
+  const UPCOMING_LAUNCHES = "Upcoming Launches";
+  const SUCCESSFUL_LAUNCHES = "Successful Launches";
+  const FAILED_LAUNCHES = "Failed Launches";
+  const [isOpen, setIsOpen] = useState(false);
+  const [launchDetails, setLaunchDetails] = useState({});
+  const [dateQueryParam, setDateQueryParam] = useState({
+    start: new Date(startQuery),
+    end: new Date(endQuery),
+  });
+  const urlToSelectMappers = {
+    [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
+      ALL_LAUNCHES,
+    [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
+      UPCOMING_LAUNCHES,
+    [`/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
+      SUCCESSFUL_LAUNCHES,
+    [`/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]:
+      FAILED_LAUNCHES,
+  };
+  const [selected, setSelected] = useState(
+    urlToSelectMappers[`${location.pathname}${location.search}`]
+  );
+  const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
+  const history = useHistory();
+  const toggling = (e, option) => {
+    setIsOpen(!isOpen);
+    setSelected(option);
+    if (isOpen) {
+      history.push(selectedToURlMappers[option]);
     }
-    const [selected, setSelected] = useState(urlToSelectMappers[`${location.pathname}${location.search}`]);
-    const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
-    const [dateQueryParam, setDateQueryParam] = useState({ start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, new Date().getDate()), end: new Date() });
-    const history = useHistory()
+  };
 
-    const toggling = (e, option) => {
-        setIsOpen(!isOpen);
-        setSelected(option);
-        if (isOpen) {
-            history.push(selectedToURlMappers[option]);
-        }
+  const dispatch = useDispatch();
+
+  const pending = useSelector(getLoadingState);
+  const selectedToURlMappers = {
+    [ALL_LAUNCHES]: `/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
+    [UPCOMING_LAUNCHES]: `/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
+    [SUCCESSFUL_LAUNCHES]: `/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
+    [FAILED_LAUNCHES]: `/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
+  };
+
+  useEffect(() => {
+    setSelected(urlToSelectMappers[`${location.pathname}${location.search}`]);
+  }, [location.pathname, location.search]);
+
+  useEffect(() => {
+    let params = {
+      launch_success: queryString.parse(location.search).launch_success,
     };
-
-    const dispatch = useDispatch();
-
-    const fetchData = {
-        [ALL_LAUNCHES]: fetchLaunches,
-        [UPCOMING_LAUNCHES]: fetchUpcomingLaunches,
-        [SUCCESSFUL_LAUNCHES]: fetchLaunches,
-        [FAILED_LAUNCHES]: fetchLaunches
+    if (
+      dateQueryParam.start != "Invalid Date" &&
+      dateQueryParam.end != "Invalid Date"
+    ) {
+      params = { ...params, ...dateQueryParam };
     }
 
-    const pending = useSelector(getLoadingState);
-    const selectedToURlMappers = {
-        [ALL_LAUNCHES]: '/launches',
-        [UPCOMING_LAUNCHES]: '/launches/upcoming',
-        [SUCCESSFUL_LAUNCHES]: '/launches?launch_success=true',
-        [FAILED_LAUNCHES]: '/launches?launch_success=false'
+    if (location.pathname === "/launches") {
+      dispatch(fetchLaunches({ ...params }));
+    } else if (location.pathname === "/launches/upcoming") {
+      dispatch(fetchUpcomingLaunches({ ...params }));
     }
+  }, [selected, dateQueryParam, location.search, location.pathname]);
 
-    useEffect(() => {
-        setSelected(urlToSelectMappers[`${location.pathname}${location.search}`]);
-    }, [location.pathname, location.search]);
-
-    useEffect(() => {
-        const params = queryString.parse(location.search);
-        dispatch(fetchData[urlToSelectMappers[location?.pathname]]({ ...params, ...dateQueryParam }))
-    }, [selected, dateQueryParam, location.search, location.pathname])
-
-
-    const closeLaunchModal = () => {
-        setIsLaunchCardOpen(false);
-    }
-
-    const dropdownOptions = [ALL_LAUNCHES, UPCOMING_LAUNCHES, SUCCESSFUL_LAUNCHES, FAILED_LAUNCHES];
-    const launches = useSelector(getLaunchResults);
-    const COLUMNS = useMemo(
-        () => launchTableColumns, []
+  useEffect(() => {
+    history.push(
+      `${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`
     );
+  }, [dateQueryParam]);
 
-    const openLaunchCard = (launch) => {
-        setLaunchDetails(launch);
-        setIsLaunchCardOpen(!isLaunchCardOpen);
-    }
+  const closeLaunchModal = () => {
+    setIsLaunchCardOpen(false);
+  };
+  const dropdownOptions = [
+    ALL_LAUNCHES,
+    UPCOMING_LAUNCHES,
+    SUCCESSFUL_LAUNCHES,
+    FAILED_LAUNCHES,
+  ];
+  const launches = useSelector(getLaunchResults);
+  const COLUMNS = useMemo(() => launchTableColumns, []);
 
-    const getQueryParams = (startDate, endDate) => {
-        setDateQueryParam({ start: startDate, end: endDate });
-    }
+  const openLaunchCard = (launch) => {
+    setLaunchDetails(launch);
+    setIsLaunchCardOpen(!isLaunchCardOpen);
+  };
 
-    return (
-        <>
-            <Header />
-            <ContentContainer>
-                <Col>
-                    <Row margin={`${PxToRem(24)} 0`}>
-                        <SelectDate getQueryParams={getQueryParams} />
-                        <SelectLaunchType dropdownOptions={dropdownOptions} isOpen={isOpen} selected={selected} toggling={toggling} />
-                    </Row>
-                    <Row>
-                        <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
-                    </Row>
-                </Col>
-            </ContentContainer>
-            <LaunchCard launchDetails={launchDetails} isOpen={isLaunchCardOpen} closeModal={closeLaunchModal} />
-        </>
-    )
-}
+  const getQueryParams = (startDate, endDate) => {
+    let queryParam = { start: startDate, end: endDate };
+    setDateQueryParam(queryParam);
+  };
+
+  return (
+    <>
+      <Header />
+      <ContentContainer>
+        <Col>
+          <Row margin={`${PxToRem(24)} 0`}>
+            <SelectDate getQueryParams={getQueryParams} location={location} />
+            <SelectLaunchType
+              dropdownOptions={dropdownOptions}
+              isOpen={isOpen}
+              selected={selected}
+              toggling={toggling}
+            />
+          </Row>
+          <Row>
+            <Table
+              columns={COLUMNS}
+              tableData={launches}
+              openLaunchCard={openLaunchCard}
+              loading={pending}
+            />
+          </Row>
+        </Col>
+      </ContentContainer>
+      <LaunchCard
+        launchDetails={launchDetails}
+        isOpen={isLaunchCardOpen}
+        closeModal={closeLaunchModal}
+      />
+    </>
+  );
+};
 
 export default HomePage;

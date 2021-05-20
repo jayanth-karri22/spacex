@@ -1,5 +1,5 @@
-import * as React from "react"
-import PxToRem from "../../utils/PxToRem"
+import * as React from "react";
+import PxToRem from "../../utils/PxToRem";
 
 function MainLogo(props) {
   return (
@@ -27,7 +27,7 @@ function MainLogo(props) {
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }
 
-export default MainLogo
+export default MainLogo;

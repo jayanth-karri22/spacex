@@ -125,7 +125,7 @@ const DatePicker = ({
   );
 
   useEffect(() => {
-    if (DefaultDatesRanges.indexOf(dateRangeSelected)!=-1) {
+    if (DefaultDatesRanges.indexOf(dateRangeSelected) != -1) {
       getQueryParams(startDate, endDate);
       getFilterText(dateRangeSelected);
       setStartDateSelected(false);

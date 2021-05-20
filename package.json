@@ -25,7 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier \"./src/**/*.{js,jsx,ts,tsx,scss,html,md,json,test.jsx,test.tsx,test.js,test.ts}\" --write"
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "prettier": "^2.3.0",
     "redux-devtools-extension": "^2.13.9"
   }
 }

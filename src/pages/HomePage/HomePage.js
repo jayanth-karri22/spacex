@@ -11,12 +11,12 @@ import LaunchCard from "../../components/LaunchCard";
 import SelectDate from "../../components/SelectDate";
 import SelectLaunchType from "../../components/SelectLaunchType";
 import {
-    fetchLaunches,
-    fetchUpcomingLaunches
+  fetchLaunches,
+  fetchUpcomingLaunches,
 } from "../../redux/launches/actions";
 import {
-    getLaunchResults,
-    getLoadingState
+  getLaunchResults,
+  getLoadingState,
 } from "../../redux/launches/selectors";
 import { launchTableColumns } from "../../utils/launchTableColumns";
 import PxToRem from "../../utils/PxToRem";

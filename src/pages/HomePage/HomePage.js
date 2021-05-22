@@ -27,7 +27,7 @@ const HomePage = ({ location }) => {
     let paginationIndex = queryString.parse(location.search).page;
     startQuery = startQuery == 'Invalid Date' || startQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth()-6, new Date().getDate()) : startQuery;
     endQuery = endQuery == 'Invalid Date' || endQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) : endQuery;
-    paginationIndex = paginationIndex == 'undefined' ? 0 : Number(paginationIndex);
+    paginationIndex = !paginationIndex ? 0 : Number(paginationIndex);
     return {start: startQuery, end: endQuery, page: paginationIndex}
   }
 

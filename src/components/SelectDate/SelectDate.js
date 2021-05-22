@@ -11,7 +11,7 @@ const SelectDate = ({ getQueryParams, location, getStartQuery }) => {
   const handleToggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
-  const [filterText, setFilterText] = useState('Till 6 months');
+  const [filterText, setFilterText] = useState('Past 6 months');
 
   const getFilterText = text => {
     setFilterText(text);

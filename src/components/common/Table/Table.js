@@ -51,7 +51,7 @@ const Container = styled.div`
   border: 1px solid #e4e4e7;
 `;
 
-const Table = ({ columns, tableData, openLaunchCard, loading }) => {
+const Table = ({ columns, tableData, openLaunchCard, loading, initialTabIndex, setPageQuery }) => {
   const data = useMemo(() => tableData || [], [tableData]);
   const {
     getTableProps,
@@ -73,7 +73,7 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 12 }
+      initialState: { pageIndex: initialTabIndex, pageSize: 12 }
     },
     usePagination,
     useRowSelect
@@ -129,6 +129,7 @@ const Table = ({ columns, tableData, openLaunchCard, loading }) => {
           previousPage={previousPage}
           nextPage={nextPage}
           canNextPage={canNextPage}
+          setPageQuery={setPageQuery}
           canPreviousPage={canPreviousPage}></Pagination>
       </TableWrapper>
     </>

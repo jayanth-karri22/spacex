@@ -85,7 +85,6 @@ const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, getStar
   const [dateRangeSelected, setDateRangeSelected] = useState(getInitialDateRange(date1, date2));
 
   useEffect(() => {
-    console.log(dateRangeSelected, "DATE RANGE")
     if (dateRangeSelected != null) {
       getQueryParams(startDate, endDate);
       getFilterText(dateRangeSelected);
@@ -127,7 +126,7 @@ const DatePicker = ({ isOpen, closeModal, getQueryParams, getFilterText, getStar
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
     const date = new Date().getDate();
-    setEndDate(new Date());
+    setEndDate(new Date(year,month,date));
     getFilterText(range);
     setDateRangeSelected(range);
     switch (range) {

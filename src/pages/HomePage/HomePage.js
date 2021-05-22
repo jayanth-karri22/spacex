@@ -24,11 +24,11 @@ const HomePage = ({ location }) => {
   const getStartQuery = () => {
     let startQuery = queryString.parse(location.search).start;
     let endQuery = queryString.parse(location.search).end;
-
+    let paginationIndex = queryString.parse(location.search).page;
     startQuery = startQuery == 'Invalid Date' || startQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth()-6, new Date().getDate()) : startQuery;
     endQuery = endQuery == 'Invalid Date' || endQuery == undefined ? new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) : endQuery;
-
-    return {start: startQuery, end: endQuery}
+    paginationIndex = paginationIndex == 'undefined' ? 0 : paginationIndex;
+    return {start: startQuery, end: endQuery, page: paginationIndex}
   }
 
   const ALL_LAUNCHES = 'All Launches';
@@ -41,10 +41,10 @@ const HomePage = ({ location }) => {
   
 
   const urlToSelectMappers = {
-    [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: ALL_LAUNCHES,
-    [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: UPCOMING_LAUNCHES,
-    [`/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: SUCCESSFUL_LAUNCHES,
-    [`/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`]: FAILED_LAUNCHES
+    [`/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`]: ALL_LAUNCHES,
+    [`/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`]: UPCOMING_LAUNCHES,
+    [`/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`]: SUCCESSFUL_LAUNCHES,
+    [`/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`]: FAILED_LAUNCHES
   };
   const [selected, setSelected] = useState(urlToSelectMappers[`${location.pathname}${location.search}`]);
   const [isLaunchCardOpen, setIsLaunchCardOpen] = useState(false);
@@ -53,18 +53,19 @@ const HomePage = ({ location }) => {
     setIsOpen(!isOpen);
     setSelected(option);
     if (isOpen) {
+      let params = {...dateQueryParam, page:0};
+      setDateQueryParam(params);
       history.push(selectedToURlMappers[option]);
     }
   };
 
   const dispatch = useDispatch();
-
   const pending = useSelector(getLoadingState);
   const selectedToURlMappers = {
-    [ALL_LAUNCHES]: `/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
-    [UPCOMING_LAUNCHES]: `/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
-    [SUCCESSFUL_LAUNCHES]: `/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}`,
-    [FAILED_LAUNCHES]: `/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}`
+    [ALL_LAUNCHES]: `/launches?start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`,
+    [UPCOMING_LAUNCHES]: `/launches/upcoming?start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`,
+    [SUCCESSFUL_LAUNCHES]: `/launches?launch_success=true&start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`,
+    [FAILED_LAUNCHES]: `/launches?launch_success=false&start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`
   };
 
   useEffect(() => {
@@ -88,12 +89,11 @@ const HomePage = ({ location }) => {
 
   useEffect(() => {
     if(queryString.parse(location.search).launch_success){
-      history.push(`${location.pathname}&start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
+      history.push(`${location.pathname}?launch_success=${queryString.parse(location.search).launch_success}&start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`);
     }
     else{
-      history.push(`${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}`);
+      history.push(`${location.pathname}?start=${dateQueryParam.start}&end=${dateQueryParam.end}&page=${dateQueryParam.page}`);
     }
-    
   }, [dateQueryParam]);
 
   const closeLaunchModal = () => {
@@ -109,9 +109,14 @@ const HomePage = ({ location }) => {
   };
 
   const getQueryParams = (startDate, endDate) => {
-    let queryParam = { start: startDate, end: endDate };
+    let queryParam = { start: startDate, end: endDate, page: dateQueryParam.page };
     setDateQueryParam(queryParam);
   };
+
+  const setPageQuery = (page) => {
+    let queryParams = {...dateQueryParam, page:page};
+    setDateQueryParam(queryParams);
+  }
 
   return (
     <>
@@ -128,7 +133,7 @@ const HomePage = ({ location }) => {
             />
           </Row>
           <Row>
-            <Table columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
+            <Table setPageQuery={setPageQuery} initialTabIndex={dateQueryParam.page} columns={COLUMNS} tableData={launches} openLaunchCard={openLaunchCard} loading={pending} />
           </Row>
         </Col>
       </ContentContainer>

@@ -46,34 +46,35 @@ const Pagination = ({
   previousPage,
   nextPage,
   canNextPage,
-  totalPages
+  totalPages,
+  setPageQuery
 }) => {
   return (
     <PaginationWrapper>
-      <PageItem borderRadius={PxToRem(26)} disabled={!canPreviousPage} onClick={previousPage}>
+      <PageItem borderRadius={PxToRem(26)} disabled={!canPreviousPage} onClick={()=> [previousPage(), setPageQuery(pageIndex-1)]}>
         <Previous />
       </PageItem>
       {totalPages > pageIndex + 1 && (
-        <PageItem onClick={() => handlePagination(pageIndex)}>
+        <PageItem onClick={() => [handlePagination(pageIndex), setPageQuery(pageIndex)]}>
           <Text>{pageIndex + 1}</Text>
         </PageItem>
       )}
       {totalPages > pageIndex + 2 && (
-        <PageItem onClick={() => handlePagination(pageIndex + 1)}>
+        <PageItem onClick={() => [handlePagination(pageIndex + 1), setPageQuery(pageIndex + 1)]}>
           <Text>{pageIndex + 2}</Text>
         </PageItem>
       )}
       {pageIndex + 3 < totalPages && (
-        <PageItem onClick={() => handlePagination(pageIndex)}>
+        <PageItem onClick={() => [handlePagination(pageIndex), setPageQuery(pageIndex)]}>
           <Text>...</Text>
         </PageItem>
       )}
       {
-        <PageItem onClick={() => handlePagination(totalPages - 1)}>
+        <PageItem onClick={() => [handlePagination(totalPages - 1), setPageQuery(totalPages-1)]}>
           <Text>{totalPages}</Text>
         </PageItem>
       }
-      <PageItem disabled={!canNextPage} onClick={nextPage}>
+      <PageItem disabled={!canNextPage} onClick={()=> [nextPage(), setPageQuery(pageIndex+1)]}>
         <Next />
       </PageItem>
     </PaginationWrapper>

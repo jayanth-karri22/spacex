@@ -88,6 +88,7 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
                     src={require('../../assets/Icons/Nasa.svg').default}
+                    alt="Nasa Logo"
                   />
                 </Link>
               )}
@@ -96,6 +97,7 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
                     src={require('../../assets/Icons/Wiki.svg').default}
+                    alt="Wikipedia Logo"
                   />
                 </Link>
               )}
@@ -104,6 +106,7 @@ const LaunchCard = ({ launchDetails, isOpen, closeModal }) => {
                   <img
                     style={{ width: PxToRem(16.75), height: PxToRem(14) }}
                     src={require('../../assets/Icons/Youtube.svg').default}
+                    alt="Youtube Image"
                   />
                 </Link>
               )}

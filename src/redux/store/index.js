@@ -5,16 +5,15 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import thunk from 'redux-thunk';
 import rootReducer from './rootReducer';
 
-
 const rootPersistConfig = {
-    key: 'root-spacex-dashboard',
-    storage
+  key: 'root-spacex-dashboard',
+  storage
 };
 
 export const store = createStore(
-    persistReducer(rootPersistConfig, rootReducer),
-    {},
-    composeWithDevTools(applyMiddleware(thunk))
+  persistReducer(rootPersistConfig, rootReducer),
+  {},
+  composeWithDevTools(applyMiddleware(thunk))
 );
 
 export const persistor = persistStore(store);

@@ -21,10 +21,9 @@ const Rotate = styled.div`
 `;
 
 const Loader = () => (
-    <Rotate>
-        <LoadingSpinner />
-    </Rotate>
+  <Rotate>
+    <LoadingSpinner />
+  </Rotate>
 );
 
 export default Loader;
-

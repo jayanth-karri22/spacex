@@ -7,6 +7,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "query-string": "^7.0.0",
     "react": "^17.0.2",
     "react-datepicker": "^3.8.0",
     "react-dom": "^17.0.2",
@@ -21,16 +22,29 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier \"./src/**/*.{js,jsx,ts,tsx,scss,html,md,json,test.jsx,test.tsx,test.js,test.ts}\" --write"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "none",
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "tabWidth": 2,
+    "jsxBracketSameLine": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "quoteProps": "as-needed"
   },
   "browserslist": {
     "production": [
@@ -45,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "prettier": "^2.3.0",
     "redux-devtools-extension": "^2.13.9"
   }
 }

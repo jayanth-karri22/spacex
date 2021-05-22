@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import PxToRem from "../../../utils/PxToRem";
+import PxToRem from '../../../utils/PxToRem';
 
 const StyledText = styled.p`
   font-family: Helvetica Neue, sans-serif;
@@ -13,22 +13,31 @@ const StyledText = styled.p`
 `;
 
 const Text = ({
-    children,
-    fontSize = PxToRem(12),
-    color = '#03543F',
-    fontWeight = 500,
-    textAlign = 'center',
-    lineHeight = PxToRem(13),
-    style,
-    width = 'auto',
-    ...rest
+  children,
+  fontSize = PxToRem(12),
+  color = '#03543F',
+  fontWeight = 500,
+  textAlign = 'center',
+  lineHeight = PxToRem(13),
+  style,
+  width = 'auto',
+  ...rest
 }) => {
-    return (
-        <StyledText
-            style={{ fontSize, color, width, fontWeight, textAlign, lineHeight, ...style, ...rest }}>
-            {children}
-        </StyledText>
-    );
+  return (
+    <StyledText
+      style={{
+        fontSize,
+        color,
+        width,
+        fontWeight,
+        textAlign,
+        lineHeight,
+        ...style,
+        ...rest
+      }}>
+      {children}
+    </StyledText>
+  );
 };
 
 export default Text;

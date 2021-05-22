@@ -10,18 +10,8 @@ const StyledCol = styled.div`
   box-sizing: border-box;
 `;
 
-const Col = ({
-    children,
-    justifyContent = 'flex-start',
-    alignItems = 'flex-start',
-    style,
-    ...rest
-}) => {
-    return (
-        <StyledCol style={{ justifyContent, alignItems, ...style, ...rest }}>
-            {children}
-        </StyledCol>
-    );
+const Col = ({ children, justifyContent = 'flex-start', alignItems = 'flex-start', style, ...rest }) => {
+  return <StyledCol style={{ justifyContent, alignItems, ...style, ...rest }}>{children}</StyledCol>;
 };
 
 export default Col;
